@@ -1,0 +1,29 @@
+{
+  "name": "firelives-music-api",
+  "version": "1.0.0",
+  "description": "FireLives Music API Server with Deezer Integration",
+  "main": "music-server.js",
+  "scripts": {
+    "start": "node music-server.js",
+    "dev": "nodemon music-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "music",
+    "api",
+    "deezer",
+    "streaming",
+    "firelives"
+  ],
+  "author": "FireLives Team",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "pm2": "^6.0.13"
+  }
+}

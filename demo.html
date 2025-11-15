@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 FireLives - Demo Mode</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .demo-banner {
+            background: linear-gradient(135deg, #ff4500 0%, #ff8c00 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .demo-banner .emoji {
+            font-size: 24px;
+            animation: flicker 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.9; }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        <span class="emoji">🔥</span>
+        <span>DEMO MODE - Showing Sample Stations</span>
+        <span class="emoji">❤️</span>
+    </div>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <svg class="fire-icon" viewBox="0 0 100 100" width="40" height="40">
+                    <defs>
+                        <linearGradient id="fireGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff4500;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M50 10 Q40 30 45 50 Q35 45 30 60 Q25 75 35 85 Q45 95 50 90 Q55 95 65 85 Q75 75 70 60 Q65 45 55 50 Q60 30 50 10 Z" 
+                          fill="url(#fireGradient)" class="flame"/>
+                    <circle cx="50" cy="55" r="8" fill="#ff1744" class="heart"/>
+                </svg>
+                <h1>FireLives</h1>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="🔍 Search stations, genres, countries...">
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="filters">
+            <button class="filter-btn active" data-category="All">All</button>
+            <button class="filter-btn" data-category="Electronic">Electronic</button>
+            <button class="filter-btn" data-category="Rock">Rock</button>
+            <button class="filter-btn" data-category="Jazz">Jazz</button>
+            <button class="filter-btn" data-category="Pop">Pop</button>
+            <button class="filter-btn" data-category="Hip Hop">Hip Hop</button>
+            <button class="filter-btn" data-category="Classical">Classical</button>
+            <button class="filter-btn" data-category="Talk">Talk</button>
+        </div>
+
+        <div class="streams-grid" id="streamsGrid">
+            <div class="loading">🔥 Loading fire stations...</div>
+        </div>
+    </main>
+
+    <div class="player" id="player" style="display: none;">
+        <div class="player-info">
+            <div class="player-thumbnail" id="playerThumbnail"></div>
+            <div class="player-details">
+                <div class="player-title" id="playerTitle">No station playing</div>
+                <div class="player-author" id="playerAuthor"></div>
+            </div>
+        </div>
+        <div class="player-controls">
+            <button class="control-btn" id="playPauseBtn">▶️</button>
+            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="70">
+            <span class="volume-label">🔊</span>
+        </div>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        let currentStream = null;
+        let allStreams = [];
+        let currentCategory = 'All';
+        let searchQuery = '';
+
+        const audioPlayer = document.getElementById('audioPlayer');
+        const player = document.getElementById('player');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const streamsGrid = document.getElementById('streamsGrid');
+        const searchInput = document.getElementById('searchInput');
+
+        // Fetch streams
+        async function fetchStreams() {
+            try {
+                const params = new URLSearchParams();
+                if (currentCategory !== 'All') params.append('category', currentCategory);
+                if (searchQuery) params.append('search', searchQuery);
+                params.append('limit', '20');
+
+                const response = await fetch(`/api/streams?${params}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    allStreams = data.streams;
+                    renderStreams();
+                }
+            } catch (error) {
+                console.error('Error fetching streams:', error);
+                streamsGrid.innerHTML = '<div class="error">❌ Failed to load streams</div>';
+            }
+        }
+
+        // Render streams
+        function renderStreams() {
+            if (allStreams.length === 0) {
+                streamsGrid.innerHTML = '<div class="no-results">🔍 No stations found</div>';
+                return;
+            }
+
+            streamsGrid.innerHTML = allStreams.map(stream => `
+                <div class="stream-card" data-id="${stream.id}">
+                    <div class="stream-thumbnail" style="background: linear-gradient(135deg, #ff4500 0%, #ff8c00 100%); display: flex; align-items: center; justify-content: center; font-size: 32px;">
+                        ${stream.title.charAt(0)}
+                    </div>
+                    <div class="stream-info">
+                        <div class="stream-header">
+                            <h3 class="stream-title">${stream.title}</h3>
+                            ${stream.isLive ? '<span class="live-badge">🔴 LIVE</span>' : ''}
+                        </div>
+                        <p class="stream-author">📍 ${stream.author}</p>
+                        <div class="stream-meta">
+                            <span class="stream-category">🎵 ${stream.category}</span>
+                            <span class="stream-listeners">👥 ${stream.listeners.toLocaleString()}</span>
+                        </div>
+                        <button class="play-btn" onclick="playStream('${stream.id}')">
+                            ▶️ Play
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Play stream
+        window.playStream = function(streamId) {
+            const stream = allStreams.find(s => s.id === streamId);
+            if (!stream) return;
+
+            currentStream = stream;
+            audioPlayer.src = stream.url;
+            audioPlayer.play();
+
+            document.getElementById('playerTitle').textContent = stream.title;
+            document.getElementById('playerAuthor').textContent = stream.author;
+            document.getElementById('playerThumbnail').textContent = stream.title.charAt(0);
+            player.style.display = 'flex';
+            playPauseBtn.textContent = '⏸️';
+        };
+
+        // Play/Pause
+        playPauseBtn.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playPauseBtn.textContent = '⏸️';
+            } else {
+                audioPlayer.pause();
+                playPauseBtn.textContent = '▶️';
+            }
+        });
+
+        // Volume control
+        volumeSlider.addEventListener('input', (e) => {
+            audioPlayer.volume = e.target.value / 100;
+        });
+
+        // Category filters
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                fetchStreams();
+            });
+        });
+
+        // Search
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchQuery = e.target.value;
+                fetchStreams();
+            }, 500);
+        });
+
+        // Initial load
+        audioPlayer.volume = 0.7;
+        fetchStreams();
+    </script>
+</body>
+</html>

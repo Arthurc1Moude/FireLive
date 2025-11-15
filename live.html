@@ -1,0 +1,3399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 FireLives - Live Audio Streaming</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --red: #e13238;
+            --red-hover: #ff4444;
+            --bg-base: #000000;
+            --bg-elevated: #121212;
+            --bg-highlight: #1a1a1a;
+            --text-base: #ffffff;
+            --text-subdued: #b3b3b3;
+            --border: #282828;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--bg-base);
+            color: var(--text-base);
+            overflow: hidden;
+        }
+
+        /* Layout */
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-base);
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            transition: transform 0.3s;
+        }
+
+        .sidebar.hidden {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 24px 24px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .fire-icon-svg {
+            width: 32px;
+            height: 32px;
+            color: var(--red);
+        }
+
+        .sidebar-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 8px;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: var(--text-subdued);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-highlight);
+            color: var(--text-base);
+        }
+
+        .nav-item.active {
+            background: var(--bg-highlight);
+            color: var(--text-base);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .sidebar-user {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sidebar-user:hover {
+            background: var(--bg-highlight);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: var(--text-subdued);
+        }
+
+        /* Main Content */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Bar */
+        .topbar {
+            height: 64px;
+            background: var(--bg-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            color: var(--text-base);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .menu-btn:hover {
+            background: var(--bg-highlight);
+        }
+
+        .search-container {
+            width: 400px;
+            display: flex;
+            align-items: center;
+            background: var(--bg-base);
+            border-radius: 500px;
+            padding: 8px 16px;
+            gap: 8px;
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-base);
+            font-size: 14px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            color: var(--text-base);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-highlight);
+        }
+
+        .user-menu-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px 4px 4px;
+            background: var(--bg-base);
+            border: none;
+            border-radius: 500px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .user-menu-btn:hover {
+            background: var(--bg-highlight);
+        }
+
+        .user-menu-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .user-menu-name {
+            color: var(--text-base);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-width: 200px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg-highlight);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+            padding-bottom: 120px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        /* Horizontal Scroll Container */
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .see-all {
+            color: var(--text-subdued);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .see-all:hover {
+            color: var(--text-base);
+        }
+
+        .cards-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .stream-card {
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .stream-card:hover {
+            background: var(--bg-highlight);
+        }
+
+        .stream-thumbnail {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--bg-highlight);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .vip-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .vip-badge.fyre {
+            background: rgba(251, 188, 5, 0.9);
+            color: #000;
+        }
+
+        .vip-badge.pro {
+            background: rgba(138, 43, 226, 0.9);
+            color: #fff;
+        }
+
+        .vip-badge.plus {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .vip-badge.family {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: #fff;
+        }
+
+        .locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1;
+        }
+
+        .stream-card:hover .locked-overlay {
+            opacity: 1;
+        }
+
+        .stream-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-subdued);
+        }
+
+        .play-button {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 48px;
+            height: 48px;
+            background: var(--red);
+            border: none;
+            border-radius: 50%;
+            color: var(--text-base);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: all 0.3s;
+            box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .stream-card:hover .play-button {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .play-button:hover {
+            background: var(--red-hover);
+            transform: scale(1.06);
+        }
+
+        .play-button.playing {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stream-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stream-author {
+            font-size: 14px;
+            color: var(--text-subdued);
+        }
+
+        /* Mini Player */
+        .mini-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 90px;
+            background: var(--bg-elevated);
+            border-top: 1px solid var(--border);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+            z-index: 100;
+        }
+
+        .mini-player.visible {
+            transform: translateY(0);
+        }
+
+        .mini-player-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .mini-player-thumbnail {
+            width: 56px;
+            height: 56px;
+            background: var(--bg-highlight);
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .mini-player-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .mini-player-details {
+            min-width: 0;
+        }
+
+        .mini-player-title {
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mini-player-author {
+            font-size: 12px;
+            color: var(--text-subdued);
+        }
+
+        .mini-player-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .control-btn {
+            width: 28px;
+            height: 28px;
+            background: transparent;
+            border: none;
+            border-radius: 50%;
+            color: var(--text-base);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            color: var(--red);
+            transform: scale(1.1);
+        }
+
+        .control-btn.play-pause {
+            width: 36px;
+            height: 36px;
+            background: var(--red);
+        }
+
+        .control-btn.play-pause:hover {
+            background: var(--red-hover);
+            color: var(--text-base);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-slider {
+            width: 100px;
+            height: 4px;
+            background: var(--bg-highlight);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--text-base);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Auth Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: var(--bg-elevated);
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .modal-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .modal-subtitle {
+            color: var(--text-subdued);
+            font-size: 14px;
+        }
+
+        .auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .auth-btn {
+            padding: 12px 24px;
+            border: 1px solid var(--border);
+            border-radius: 500px;
+            background: transparent;
+            color: var(--text-base);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .auth-btn:hover {
+            background: var(--bg-highlight);
+            transform: scale(1.02);
+        }
+
+        .auth-btn.primary {
+            background: var(--red);
+            border-color: var(--red);
+        }
+
+        .auth-btn.primary:hover {
+            background: var(--red-hover);
+        }
+
+        .divider {
+            text-align: center;
+            color: var(--text-subdued);
+            font-size: 12px;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-base);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-base);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--text-base);
+        }
+
+        .form-link {
+            color: var(--text-base);
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .form-link:hover {
+            color: var(--red);
+        }
+
+        /* Premium Plans */
+        .premium-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .premium-header h1 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+
+        .premium-header p {
+            font-size: 18px;
+            color: var(--text-subdued);
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .plan-card {
+            background: var(--bg-elevated);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--red);
+            box-shadow: 0 8px 24px rgba(225, 50, 56, 0.2);
+        }
+
+        .plan-card.popular {
+            border-color: var(--red);
+            background: linear-gradient(135deg, var(--bg-elevated) 0%, rgba(225, 50, 56, 0.05) 100%);
+        }
+
+        .plan-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: var(--red);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .plan-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--red);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 32px;
+        }
+
+        .plan-name {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .plan-price {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+
+        .plan-price span {
+            font-size: 18px;
+            color: var(--text-subdued);
+            font-weight: 400;
+        }
+
+        .plan-period {
+            color: var(--text-subdued);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 32px;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-check {
+            color: var(--red);
+            font-weight: 900;
+            font-size: 18px;
+        }
+
+        .plan-button {
+            width: 100%;
+            padding: 16px;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .plan-button:hover {
+            background: var(--red-hover);
+            transform: scale(1.05);
+        }
+
+        .plan-button.secondary {
+            background: transparent;
+            border: 2px solid var(--text-subdued);
+            color: var(--text-base);
+        }
+
+        .plan-button.secondary:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        /* Payment Modal */
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 24px;
+        }
+
+        .payment-content {
+            background: var(--bg-elevated);
+            border-radius: 16px;
+            padding: 48px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .payment-header h2 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .payment-summary {
+            background: var(--bg-base);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .payment-summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .payment-summary-row.total {
+            font-size: 24px;
+            font-weight: 900;
+            padding-top: 12px;
+            border-top: 2px solid var(--border);
+            margin-top: 12px;
+        }
+
+        .payment-methods {
+            margin-bottom: 32px;
+        }
+
+        .payment-method-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--bg-base);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-base);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .payment-method-btn:hover {
+            border-color: var(--red);
+            background: var(--bg-highlight);
+        }
+
+        .payment-method-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .payment-close {
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-base);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .payment-close:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .current-plan-badge {
+            display: inline-block;
+            background: var(--red);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 12px;
+        }
+
+        @media (max-width: 1400px) {
+            .plans-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .cards-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                z-index: 1000;
+                height: 100%;
+            }
+
+            .cards-row {
+                grid-template-columns: 1fr;
+            }
+
+            .search-container {
+                width: 200px;
+            }
+
+            .volume-control {
+                display: none;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-content {
+                padding: 24px;
+            }
+
+            .premium-header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Icons
+        const FireIcon = ({ size = 24 }) => (
+            <svg className="fire-icon-svg" width={size} height={size} viewBox="0 0 100 100" fill="currentColor">
+                <path d="M50 15 Q45 25 45 35 Q45 45 40 50 Q35 55 35 65 Q35 75 40 82 Q45 89 50 90 Q55 89 60 82 Q65 75 65 65 Q65 55 60 50 Q55 45 55 35 Q55 25 50 15 Z" />
+            </svg>
+        );
+
+        const HomeIcon = () => (
+            <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+        );
+
+        const SearchIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+        );
+
+        const LibraryIcon = () => (
+            <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/>
+            </svg>
+        );
+
+        const PlayIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M8 5v14l11-7z"/>
+            </svg>
+        );
+
+        const PauseIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+            </svg>
+        );
+
+        const MenuIcon = () => (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        );
+
+        const BellIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+            </svg>
+        );
+
+        const SettingsIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+            </svg>
+        );
+
+        const VolumeIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+            </svg>
+        );
+
+        const MusicIcon = () => (
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+            </svg>
+        );
+
+        const GoogleIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+        );
+
+        const FacebookIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+        );
+
+        const AppleIcon = () => (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+            </svg>
+        );
+
+        const PremiumIcon = () => (
+            <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+            </svg>
+        );
+
+        const CreditCardIcon = () => (
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+            </svg>
+        );
+
+        const VideoIcon = () => (
+            <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+            </svg>
+        );
+
+        const LiveIcon = () => (
+            <svg className="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                <circle cx="12" cy="12" r="3" fill="var(--red)"/>
+            </svg>
+        );
+
+        const App = () => {
+            const [sidebarOpen, setSidebarOpen] = useState(true);
+            const [currentPage, setCurrentPage] = useState('home');
+            const [streams, setStreams] = useState([]);
+            const [currentStream, setCurrentStream] = useState(null);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [volume, setVolume] = useState(70);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [searchResults, setSearchResults] = useState([]);
+            const [isSearching, setIsSearching] = useState(false);
+            const [showUserMenu, setShowUserMenu] = useState(false);
+            const [showAuthModal, setShowAuthModal] = useState(true);
+            const [authMode, setAuthMode] = useState('welcome'); // welcome, login, signup
+            const [user, setUser] = useState(null);
+            const [language, setLanguage] = useState('en');
+            const [showPaymentModal, setShowPaymentModal] = useState(false);
+            const [selectedPlan, setSelectedPlan] = useState(null);
+            const [userSubscription, setUserSubscription] = useState(null); // null, 'fyre', 'pro', 'plus', 'family'
+            
+            // 📚 LIBRARY SYSTEM - Save songs, albums, artists, playlists, podcasts, radio
+            const [library, setLibrary] = useState({
+                songs: [],
+                albums: [],
+                artists: [],
+                playlists: [],
+                podcasts: [],
+                radioStations: []
+            });
+            
+            // ⏯️ ADVANCED PLAYBACK - Progress bar, seek, save position, buffering
+            const [currentTime, setCurrentTime] = useState(0);
+            const [duration, setDuration] = useState(0);
+            const [buffered, setBuffered] = useState(0);
+            const [isSeeking, setIsSeeking] = useState(false);
+            const [savedPositions, setSavedPositions] = useState({}); // Save playback positions
+            const [playOrder, setPlayOrder] = useState('sequential'); // 'sequential', 'shuffle', 'repeat-all', 'repeat-one'
+            const [playlist, setPlaylist] = useState([]); // Current playlist for playback
+            const [currentIndex, setCurrentIndex] = useState(0); // Current track index in playlist
+            
+            // 📱 BLUETOOTH SYSTEM - Device management, auto-reconnect, battery, routing
+            const [bluetoothDevices, setBluetoothDevices] = useState([]);
+            const [connectedDevice, setConnectedDevice] = useState(null);
+            const [showBluetoothModal, setShowBluetoothModal] = useState(false);
+            const [audioOutput, setAudioOutput] = useState('device'); // 'device', 'bluetooth', 'airplay'
+            const [bluetoothServer, setBluetoothServer] = useState(null);
+            const [bluetoothCharacteristic, setBluetoothCharacteristic] = useState(null);
+            
+            // 🔍 SMART SEARCH - Songs, artists, albums, playlists, genres, podcasts
+            const [searchCategory, setSearchCategory] = useState('all'); // 'all', 'songs', 'artists', 'albums', 'playlists'
+            const [searchFilters, setSearchFilters] = useState({
+                genre: null,
+                year: null,
+                duration: null
+            });
+            const [selectedCountry, setSelectedCountry] = useState('us'); // Country for music search
+            const [availableCountries, setAvailableCountries] = useState([]);
+            
+            // 👤 FULL USER PROFILE - History, stats, social features, followers
+            const [userProfile, setUserProfile] = useState({
+                displayName: '',
+                bio: '',
+                avatar: '',
+                followers: [],
+                following: [],
+                publicPlaylists: [],
+                listeningHistory: [],
+                stats: {
+                    totalListeningTime: 0,
+                    topArtists: [],
+                    topGenres: [],
+                    songsPlayed: 0
+                }
+            });
+            const [showProfileModal, setShowProfileModal] = useState(false);
+            
+            const audioRef = useRef(null);
+
+            const languages = {
+                en: { 
+                    home: 'Home', 
+                    search: 'Search', 
+                    library: 'Library', 
+                    premium: 'Premium',
+                    settings: 'Settings', 
+                    logout: 'Logout',
+                    upgradePremium: 'Upgrade to Premium',
+                    choosePlan: 'Choose Your Plan',
+                    perMonth: '/month',
+                    subscribe: 'Subscribe Now',
+                    currentPlan: 'Current Plan',
+                    selectPayment: 'Select Payment Method'
+                },
+                zh: { 
+                    home: '首页', 
+                    search: '搜索', 
+                    library: '库', 
+                    premium: '高级会员',
+                    settings: '设置', 
+                    logout: '登出',
+                    upgradePremium: '升级到高级会员',
+                    choosePlan: '选择您的计划',
+                    perMonth: '/月',
+                    subscribe: '立即订阅',
+                    currentPlan: '当前计划',
+                    selectPayment: '选择支付方式'
+                },
+                es: { 
+                    home: 'Inicio', 
+                    search: 'Buscar', 
+                    library: 'Biblioteca', 
+                    premium: 'Premium',
+                    settings: 'Ajustes', 
+                    logout: 'Cerrar sesión',
+                    upgradePremium: 'Actualizar a Premium',
+                    choosePlan: 'Elige tu plan',
+                    perMonth: '/mes',
+                    subscribe: 'Suscribirse ahora',
+                    currentPlan: 'Plan actual',
+                    selectPayment: 'Seleccionar método de pago'
+                },
+                fr: { 
+                    home: 'Accueil', 
+                    search: 'Rechercher', 
+                    library: 'Bibliothèque', 
+                    premium: 'Premium',
+                    settings: 'Paramètres', 
+                    logout: 'Déconnexion',
+                    upgradePremium: 'Passer à Premium',
+                    choosePlan: 'Choisissez votre forfait',
+                    perMonth: '/mois',
+                    subscribe: "S'abonner maintenant",
+                    currentPlan: 'Forfait actuel',
+                    selectPayment: 'Sélectionner le mode de paiement'
+                },
+                de: { 
+                    home: 'Startseite', 
+                    search: 'Suchen', 
+                    library: 'Bibliothek', 
+                    premium: 'Premium',
+                    settings: 'Einstellungen', 
+                    logout: 'Abmelden',
+                    upgradePremium: 'Auf Premium upgraden',
+                    choosePlan: 'Wählen Sie Ihren Plan',
+                    perMonth: '/Monat',
+                    subscribe: 'Jetzt abonnieren',
+                    currentPlan: 'Aktueller Plan',
+                    selectPayment: 'Zahlungsmethode auswählen'
+                },
+                ja: { 
+                    home: 'ホーム', 
+                    search: '検索', 
+                    library: 'ライブラリ', 
+                    premium: 'プレミアム',
+                    settings: '設定', 
+                    logout: 'ログアウト',
+                    upgradePremium: 'プレミアムにアップグレード',
+                    choosePlan: 'プランを選択',
+                    perMonth: '/月',
+                    subscribe: '今すぐ登録',
+                    currentPlan: '現在のプラン',
+                    selectPayment: '支払い方法を選択'
+                },
+            };
+
+            const t = languages[language];
+
+            const premiumPlans = [
+                {
+                    id: 'fyre',
+                    name: 'Fyre+',
+                    icon: '🔥',
+                    price: 4.99,
+                    popular: false,
+                    features: [
+                        'Ad-free listening',
+                        'High quality audio (128kbps)',
+                        'Unlimited skips',
+                        'Offline mode (10 stations)',
+                        'Basic support'
+                    ]
+                },
+                {
+                    id: 'pro',
+                    name: 'Pro+',
+                    icon: '⚡',
+                    price: 9.99,
+                    popular: true,
+                    features: [
+                        'Everything in Fyre+',
+                        'Ultra HD audio (320kbps)',
+                        'Unlimited offline stations',
+                        'Exclusive content',
+                        'Priority support',
+                        'Custom playlists'
+                    ]
+                },
+                {
+                    id: 'plus',
+                    name: 'Plus+',
+                    icon: '💎',
+                    price: 14.99,
+                    popular: false,
+                    features: [
+                        'Everything in Pro+',
+                        'Lossless audio (FLAC)',
+                        'Early access to new features',
+                        'Concert livestreams',
+                        'Artist meet & greets',
+                        'Premium support 24/7'
+                    ]
+                },
+                {
+                    id: 'family',
+                    name: 'Family+',
+                    icon: '👨‍👩‍👧‍👦',
+                    price: 19.99,
+                    popular: false,
+                    features: [
+                        'Everything in Plus+',
+                        'Up to 6 accounts',
+                        'Family mix playlists',
+                        'Parental controls',
+                        'Individual profiles',
+                        'Shared family library'
+                    ]
+                }
+            ];
+
+            useEffect(() => {
+                if (user) {
+                    fetchStreams();
+                    loadCountries();
+                }
+            }, [user]);
+
+            // Load available countries for music search
+            const loadCountries = async () => {
+                try {
+                    const response = await fetch('http://localhost:3001/api/music/countries');
+                    const data = await response.json();
+                    if (data.success) {
+                        setAvailableCountries(data.countries);
+                    }
+                } catch (error) {
+                    console.error('Failed to load countries:', error);
+                }
+            };
+
+            const fetchStreams = async () => {
+                try {
+                    // Fetch real music from Deezer API via our music server
+                    const genres = ['Electronic', 'Rock', 'Jazz', 'Pop', 'Hip Hop'];
+                    const allTracks = [];
+                    
+                    for (const genre of genres) {
+                        const response = await fetch(`http://localhost:3001/api/music/search?q=${genre}&limit=6`);
+                        const data = await response.json();
+                        if (data.success) {
+                            const tracks = data.results.map((track, index) => {
+                                // Assign VIP tiers to tracks (simulate premium content)
+                                let vipTier = null;
+                                const trackIndex = index % 6;
+                                
+                                if (trackIndex === 0 || trackIndex === 1) {
+                                    vipTier = null; // Free for everyone
+                                } else if (trackIndex === 2) {
+                                    vipTier = 'fyre'; // Requires Fyre+ or higher
+                                } else if (trackIndex === 3) {
+                                    vipTier = 'pro'; // Requires Pro+ or higher
+                                } else if (trackIndex === 4) {
+                                    vipTier = 'plus'; // Requires Plus+ or higher
+                                } else if (trackIndex === 5) {
+                                    vipTier = 'family'; // Requires Family+ (highest tier)
+                                }
+                                
+                                return {
+                                    id: track.id,
+                                    title: track.title,
+                                    author: track.artist,
+                                    category: genre,
+                                    url: track.preview, // 30-second preview URL
+                                    thumbnail: track.cover,
+                                    duration: track.duration,
+                                    album: track.album,
+                                    vipTier: vipTier // null = free, 'fyre', 'pro', 'plus', 'family'
+                                };
+                            });
+                            allTracks.push(...tracks);
+                        }
+                    }
+                    
+                    setStreams(allTracks);
+                } catch (error) {
+                    console.error('Error fetching music:', error);
+                    // Fallback to empty array if music server is not running
+                    setStreams([]);
+                }
+            };
+
+            // Check if user can access a track based on their subscription
+            const canAccessTrack = (track) => {
+                if (!track.vipTier) return true; // Free tracks
+                if (!userSubscription) return false; // No subscription
+                
+                // Define tier hierarchy
+                const tierHierarchy = {
+                    'fyre': 1,
+                    'pro': 2,
+                    'plus': 3,
+                    'family': 4
+                };
+                
+                const userTierLevel = tierHierarchy[userSubscription] || 0;
+                const requiredTierLevel = tierHierarchy[track.vipTier] || 0;
+                
+                return userTierLevel >= requiredTierLevel;
+            };
+
+            const playStream = (stream) => {
+                // Check if user can access this track
+                if (!canAccessTrack(stream)) {
+                    // Show upgrade prompt
+                    const tierNames = {
+                        'fyre': 'Fyre+ 🔥',
+                        'pro': 'Pro+ ⚡',
+                        'plus': 'Plus+ 💎',
+                        'family': 'Family+ 👨‍👩‍👧‍👦'
+                    };
+                    alert(`🔒 This is a ${tierNames[stream.vipTier]} exclusive track!\n\nUpgrade to ${tierNames[stream.vipTier]} or higher to unlock this music.`);
+                    setCurrentPage('premium'); // Redirect to premium page
+                    return;
+                }
+                
+                if (audioRef.current) {
+                    if (currentStream?.id === stream.id && isPlaying) {
+                        audioRef.current.pause();
+                        setIsPlaying(false);
+                    } else {
+                        setCurrentStream(stream);
+                        // Set playlist to all streams and find current index
+                        setPlaylist(streams);
+                        const index = streams.findIndex(s => s.id === stream.id);
+                        setCurrentIndex(index >= 0 ? index : 0);
+                        audioRef.current.src = stream.url;
+                        audioRef.current.play();
+                        setIsPlaying(true);
+                    }
+                }
+            };
+
+            const togglePlayPause = () => {
+                if (audioRef.current && currentStream) {
+                    if (isPlaying) {
+                        audioRef.current.pause();
+                        setIsPlaying(false);
+                    } else {
+                        audioRef.current.play();
+                        setIsPlaying(true);
+                    }
+                }
+            };
+
+            // 🎵 PLAYBACK NAVIGATION FUNCTIONS
+            const playNext = () => {
+                if (playlist.length === 0) return;
+                
+                let nextIndex;
+                if (playOrder === 'shuffle') {
+                    // Random next track
+                    nextIndex = Math.floor(Math.random() * playlist.length);
+                } else if (playOrder === 'repeat-one') {
+                    // Repeat current track
+                    nextIndex = currentIndex;
+                } else {
+                    // Sequential or repeat-all
+                    nextIndex = currentIndex + 1;
+                    if (nextIndex >= playlist.length) {
+                        nextIndex = playOrder === 'repeat-all' ? 0 : currentIndex;
+                    }
+                }
+                
+                setCurrentIndex(nextIndex);
+                const nextTrack = playlist[nextIndex];
+                setCurrentStream(nextTrack);
+                if (audioRef.current) {
+                    audioRef.current.src = nextTrack.url;
+                    audioRef.current.play();
+                    setIsPlaying(true);
+                }
+            };
+
+            const playPrevious = () => {
+                if (playlist.length === 0) return;
+                
+                // If more than 3 seconds played, restart current track
+                if (currentTime > 3) {
+                    if (audioRef.current) {
+                        audioRef.current.currentTime = 0;
+                        setCurrentTime(0);
+                    }
+                    return;
+                }
+                
+                let prevIndex;
+                if (playOrder === 'shuffle') {
+                    // Random previous track
+                    prevIndex = Math.floor(Math.random() * playlist.length);
+                } else {
+                    // Sequential or repeat modes
+                    prevIndex = currentIndex - 1;
+                    if (prevIndex < 0) {
+                        prevIndex = playlist.length - 1;
+                    }
+                }
+                
+                setCurrentIndex(prevIndex);
+                const prevTrack = playlist[prevIndex];
+                setCurrentStream(prevTrack);
+                if (audioRef.current) {
+                    audioRef.current.src = prevTrack.url;
+                    audioRef.current.play();
+                    setIsPlaying(true);
+                }
+            };
+
+            const togglePlayOrder = () => {
+                const orders = ['sequential', 'shuffle', 'repeat-all', 'repeat-one'];
+                const currentOrderIndex = orders.indexOf(playOrder);
+                const nextOrder = orders[(currentOrderIndex + 1) % orders.length];
+                setPlayOrder(nextOrder);
+                console.log('Play order changed to:', nextOrder);
+            };
+
+            const handleAuth = (method) => {
+                // Simulate authentication
+                const userData = {
+                    name: 'User',
+                    email: 'user@firelives.com',
+                    avatar: 'U'
+                };
+                setUser(userData);
+                setShowAuthModal(false);
+            };
+
+            const handleLogout = () => {
+                setUser(null);
+                setShowAuthModal(true);
+                setAuthMode('welcome');
+            };
+
+            const getStreamsByCategory = (category) => {
+                return streams.filter(s => s.category === category).slice(0, 6);
+            };
+
+            // Get VIP badge info
+            const getVipBadgeInfo = (vipTier) => {
+                const badges = {
+                    'fyre': { icon: '🔥', name: 'FYRE+', class: 'fyre' },
+                    'pro': { icon: '⚡', name: 'PRO+', class: 'pro' },
+                    'plus': { icon: '💎', name: 'PLUS+', class: 'plus' },
+                    'family': { icon: '👨‍👩‍👧‍👦', name: 'FAMILY+', class: 'family' }
+                };
+                return badges[vipTier] || null;
+            };
+
+            // 📚 LIBRARY FUNCTIONS - Add/remove songs, albums, artists, etc.
+            const addToLibrary = (item, type) => {
+                setLibrary(prev => {
+                    const items = prev[type] || [];
+                    // Check if already exists
+                    if (items.some(i => i.id === item.id)) {
+                        return prev; // Already in library
+                    }
+                    return {
+                        ...prev,
+                        [type]: [...items, { ...item, addedAt: new Date().toISOString() }]
+                    };
+                });
+                // Show toast notification
+                console.log(`Added to ${type}:`, item.title || item.name);
+            };
+
+            const removeFromLibrary = (itemId, type) => {
+                setLibrary(prev => ({
+                    ...prev,
+                    [type]: prev[type].filter(i => i.id !== itemId)
+                }));
+            };
+
+            const isInLibrary = (itemId, type) => {
+                return library[type]?.some(i => i.id === itemId) || false;
+            };
+
+            // ⏯️ PLAYBACK CONTROL FUNCTIONS
+            const seekTo = (time) => {
+                if (audioRef.current) {
+                    audioRef.current.currentTime = time;
+                    setCurrentTime(time);
+                }
+            };
+
+            const handleSeekStart = () => {
+                setIsSeeking(true);
+            };
+
+            const handleSeekEnd = (e) => {
+                const progressBar = e.currentTarget;
+                const rect = progressBar.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                const time = percent * duration;
+                seekTo(time);
+                setIsSeeking(false);
+            };
+
+            const formatTime = (seconds) => {
+                if (isNaN(seconds)) return '0:00';
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            };
+
+            // 📱 REAL BLUETOOTH FUNCTIONS - Web Bluetooth API
+            const scanBluetoothDevices = async () => {
+                try {
+                    if (!('bluetooth' in navigator)) {
+                        alert('❌ Web Bluetooth API is not supported in this browser. Please use Chrome, Edge, or Opera.');
+                        return;
+                    }
+
+                    console.log('🔍 Scanning for Bluetooth devices...');
+                    
+                    // Request Bluetooth device with audio services
+                    const device = await navigator.bluetooth.requestDevice({
+                        acceptAllDevices: true,
+                        optionalServices: [
+                            'battery_service',
+                            'device_information',
+                            'generic_access',
+                            '0000110b-0000-1000-8000-00805f9b34fb' // Audio Sink
+                        ]
+                    });
+                    
+                    console.log('✅ Device found:', device.name);
+                    
+                    // Connect to GATT server
+                    const server = await device.gatt.connect();
+                    setBluetoothServer(server);
+                    
+                    // Try to get battery level
+                    let batteryLevel = null;
+                    try {
+                        const batteryService = await server.getPrimaryService('battery_service');
+                        const batteryCharacteristic = await batteryService.getCharacteristic('battery_level');
+                        const value = await batteryCharacteristic.readValue();
+                        batteryLevel = value.getUint8(0);
+                        console.log('🔋 Battery level:', batteryLevel + '%');
+                    } catch (e) {
+                        console.log('ℹ️ Battery service not available');
+                    }
+                    
+                    const newDevice = {
+                        id: device.id,
+                        name: device.name || 'Unknown Device',
+                        connected: true,
+                        battery: batteryLevel,
+                        device: device,
+                        server: server
+                    };
+                    
+                    // Add to devices list
+                    setBluetoothDevices(prev => {
+                        const exists = prev.find(d => d.id === device.id);
+                        if (exists) {
+                            return prev.map(d => d.id === device.id ? newDevice : d);
+                        }
+                        return [...prev, newDevice];
+                    });
+                    
+                    // Auto-connect
+                    await connectBluetooth(newDevice);
+                    
+                    // Listen for disconnection
+                    device.addEventListener('gattserverdisconnected', () => {
+                        console.log('❌ Device disconnected');
+                        setBluetoothDevices(prev => 
+                            prev.map(d => d.id === device.id ? { ...d, connected: false } : d)
+                        );
+                        if (connectedDevice?.id === device.id) {
+                            setConnectedDevice(null);
+                            setAudioOutput('device');
+                        }
+                    });
+                    
+                } catch (error) {
+                    if (error.name === 'NotFoundError') {
+                        console.log('ℹ️ No device selected');
+                    } else {
+                        console.error('❌ Bluetooth scan error:', error);
+                        alert('Bluetooth Error: ' + error.message);
+                    }
+                }
+            };
+
+            const connectBluetooth = async (device) => {
+                try {
+                    console.log('🔗 Connecting to:', device.name);
+                    
+                    // If device has a GATT server, ensure it's connected
+                    if (device.device && device.device.gatt) {
+                        if (!device.device.gatt.connected) {
+                            await device.device.gatt.connect();
+                        }
+                    }
+                    
+                    setConnectedDevice(device);
+                    setAudioOutput('bluetooth');
+                    setBluetoothDevices(prev => 
+                        prev.map(d => ({ ...d, connected: d.id === device.id }))
+                    );
+                    
+                    // Route audio to Bluetooth (browser will handle this automatically)
+                    if (audioRef.current) {
+                        try {
+                            // Try to set audio output device (Chrome 110+)
+                            if (audioRef.current.setSinkId) {
+                                const devices = await navigator.mediaDevices.enumerateDevices();
+                                const audioDevice = devices.find(d => 
+                                    d.kind === 'audiooutput' && 
+                                    d.label.toLowerCase().includes(device.name.toLowerCase())
+                                );
+                                if (audioDevice) {
+                                    await audioRef.current.setSinkId(audioDevice.deviceId);
+                                    console.log('✅ Audio routed to Bluetooth device');
+                                }
+                            }
+                        } catch (e) {
+                            console.log('ℹ️ Audio routing not supported, using system default');
+                        }
+                    }
+                    
+                    console.log('✅ Connected to:', device.name);
+                } catch (error) {
+                    console.error('❌ Bluetooth connect error:', error);
+                    alert('Connection Error: ' + error.message);
+                }
+            };
+
+            const disconnectBluetooth = async () => {
+                try {
+                    if (connectedDevice?.device?.gatt?.connected) {
+                        await connectedDevice.device.gatt.disconnect();
+                        console.log('✅ Disconnected from:', connectedDevice.name);
+                    }
+                    
+                    setConnectedDevice(null);
+                    setAudioOutput('device');
+                    setBluetoothDevices(prev => 
+                        prev.map(d => ({ ...d, connected: false }))
+                    );
+                    
+                    // Reset audio output to default
+                    if (audioRef.current && audioRef.current.setSinkId) {
+                        await audioRef.current.setSinkId('');
+                    }
+                } catch (error) {
+                    console.error('❌ Disconnect error:', error);
+                }
+            };
+
+            // 🔍 ADVANCED SEARCH FUNCTIONS
+            const searchByCategory = async (query, category) => {
+                setSearchCategory(category);
+                // Implement category-specific search
+                // For now, use the existing search
+                handleSearch(query);
+            };
+
+            const applySearchFilters = (filters) => {
+                setSearchFilters(filters);
+                // Re-run search with filters
+                if (searchQuery) {
+                    handleSearch(searchQuery);
+                }
+            };
+
+            // Real-time music search - ENHANCED (30+ results, multi-source, multi-language)
+            const handleSearch = async (query) => {
+                setSearchQuery(query);
+                
+                if (!query || query.trim().length < 2) {
+                    setSearchResults([]);
+                    return;
+                }
+                
+                setIsSearching(true);
+                try {
+                    // Search with 50 results limit and country selection
+                    const response = await fetch(
+                        `http://localhost:3001/api/music/search?q=${encodeURIComponent(query)}&limit=50&country=${selectedCountry}&refresh=true`
+                    );
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        console.log(`✅ Found ${data.results.length} songs from ${Object.keys(data.sources || {}).length} sources`);
+                        console.log('📊 Sources:', data.sources);
+                        
+                        const tracks = data.results.map((track, index) => {
+                            // Assign VIP tiers to search results
+                            let vipTier = null;
+                            const tierIndex = index % 10;
+                            
+                            if (tierIndex < 4) {
+                                vipTier = null; // 40% free tracks
+                            } else if (tierIndex < 6) {
+                                vipTier = 'fyre'; // 20% Fyre+ tracks
+                            } else if (tierIndex < 8) {
+                                vipTier = 'pro'; // 20% Pro+ tracks
+                            } else if (tierIndex < 9) {
+                                vipTier = 'plus'; // 10% Plus+ tracks
+                            } else {
+                                vipTier = 'family'; // 10% Family+ tracks
+                            }
+                            
+                            return {
+                                id: track.id,
+                                title: track.title,
+                                author: track.artist,
+                                category: `${track.source || 'Search'} • ${track.language || track.country || 'Global'}`,
+                                url: track.preview,
+                                thumbnail: track.cover,
+                                duration: track.duration,
+                                album: track.album,
+                                vipTier: vipTier,
+                                source: track.source,
+                                explicit: track.explicit
+                            };
+                        });
+                        setSearchResults(tracks);
+                    }
+                } catch (error) {
+                    console.error('❌ Search error:', error);
+                    setSearchResults([]);
+                } finally {
+                    setIsSearching(false);
+                }
+            };
+
+            // Debounce search
+            useEffect(() => {
+                const timer = setTimeout(() => {
+                    if (searchQuery) {
+                        handleSearch(searchQuery);
+                    }
+                }, 500);
+                
+                return () => clearTimeout(timer);
+            }, [searchQuery]);
+
+            // 💾 HYBRID STORAGE SYSTEM - localStorage + backend sync
+            useEffect(() => {
+                // Load from localStorage on mount
+                const savedLibrary = localStorage.getItem('firelivesLibrary');
+                const savedProfile = localStorage.getItem('firelivesProfile');
+                const savedPositions = localStorage.getItem('firelivesPositions');
+                const savedSubscription = localStorage.getItem('firelivesSubscription');
+                
+                if (savedLibrary) setLibrary(JSON.parse(savedLibrary));
+                if (savedProfile) setUserProfile(JSON.parse(savedProfile));
+                if (savedPositions) setSavedPositions(JSON.parse(savedPositions));
+                if (savedSubscription) setUserSubscription(savedSubscription);
+                
+                // TODO: Sync with backend when user is logged in
+                if (user) {
+                    syncWithBackend();
+                }
+            }, [user]);
+
+            // Save to localStorage whenever library changes
+            useEffect(() => {
+                localStorage.setItem('firelivesLibrary', JSON.stringify(library));
+            }, [library]);
+
+            // Save to localStorage whenever profile changes
+            useEffect(() => {
+                localStorage.setItem('firelivesProfile', JSON.stringify(userProfile));
+            }, [userProfile]);
+
+            // Save to localStorage whenever positions change
+            useEffect(() => {
+                localStorage.setItem('firelivesPositions', JSON.stringify(savedPositions));
+            }, [savedPositions]);
+
+            // ⏯️ AUDIO EVENT LISTENERS - Progress, buffering, duration
+            useEffect(() => {
+                const audio = audioRef.current;
+                if (!audio) return;
+
+                const handleTimeUpdate = () => {
+                    if (!isSeeking) {
+                        setCurrentTime(audio.currentTime);
+                        
+                        // Save position every 5 seconds
+                        if (currentStream && Math.floor(audio.currentTime) % 5 === 0) {
+                            setSavedPositions(prev => ({
+                                ...prev,
+                                [currentStream.id]: audio.currentTime
+                            }));
+                        }
+                    }
+                };
+
+                const handleDurationChange = () => {
+                    setDuration(audio.duration);
+                };
+
+                const handleProgress = () => {
+                    if (audio.buffered.length > 0) {
+                        const bufferedEnd = audio.buffered.end(audio.buffered.length - 1);
+                        const bufferedPercent = (bufferedEnd / audio.duration) * 100;
+                        setBuffered(bufferedPercent);
+                    }
+                };
+
+                const handleEnded = () => {
+                    setIsPlaying(false);
+                    // Auto-play next track (TODO: implement queue system)
+                };
+
+                const handleLoadStart = () => {
+                    setBuffered(0);
+                };
+
+                audio.addEventListener('timeupdate', handleTimeUpdate);
+                audio.addEventListener('durationchange', handleDurationChange);
+                audio.addEventListener('progress', handleProgress);
+                audio.addEventListener('ended', handleEnded);
+                audio.addEventListener('loadstart', handleLoadStart);
+
+                return () => {
+                    audio.removeEventListener('timeupdate', handleTimeUpdate);
+                    audio.removeEventListener('durationchange', handleDurationChange);
+                    audio.removeEventListener('progress', handleProgress);
+                    audio.removeEventListener('ended', handleEnded);
+                    audio.removeEventListener('loadstart', handleLoadStart);
+                };
+            }, [audioRef.current, isSeeking, currentStream]);
+
+            // 📊 LISTENING STATS - Track listening time and history
+            useEffect(() => {
+                if (isPlaying && currentStream) {
+                    const interval = setInterval(() => {
+                        setUserProfile(prev => ({
+                            ...prev,
+                            stats: {
+                                ...prev.stats,
+                                totalListeningTime: prev.stats.totalListeningTime + 1,
+                                songsPlayed: prev.stats.songsPlayed + (currentTime === 0 ? 1 : 0)
+                            },
+                            listeningHistory: [
+                                {
+                                    track: currentStream,
+                                    timestamp: new Date().toISOString(),
+                                    duration: currentTime
+                                },
+                                ...prev.listeningHistory.slice(0, 99) // Keep last 100
+                            ]
+                        }));
+                    }, 1000);
+
+                    return () => clearInterval(interval);
+                }
+            }, [isPlaying, currentStream, currentTime]);
+
+            // Backend sync function (placeholder)
+            const syncWithBackend = async () => {
+                // TODO: Implement backend API calls
+                // try {
+                //     const response = await fetch('/api/user/sync', {
+                //         method: 'POST',
+                //         headers: { 'Content-Type': 'application/json' },
+                //         body: JSON.stringify({ library, userProfile, savedPositions })
+                //     });
+                //     const data = await response.json();
+                //     // Merge backend data with local data
+                // } catch (error) {
+                //     console.error('Sync error:', error);
+                // }
+                console.log('Backend sync would happen here');
+            };
+
+            const handleSelectPlan = (plan) => {
+                setSelectedPlan(plan);
+                setShowPaymentModal(true);
+            };
+
+            const handlePayment = async (method) => {
+                // Real payment API integration points
+                console.log(`Processing payment with ${method} for plan: ${selectedPlan.name}`);
+                
+                try {
+                    if (method === 'stripe') {
+                        // Stripe API Integration
+                        // const stripe = await loadStripe('YOUR_STRIPE_PUBLIC_KEY');
+                        // const response = await fetch('/api/create-checkout-session', {
+                        //     method: 'POST',
+                        //     headers: { 'Content-Type': 'application/json' },
+                        //     body: JSON.stringify({ planId: selectedPlan.id, userId: user.id })
+                        // });
+                        // const session = await response.json();
+                        // await stripe.redirectToCheckout({ sessionId: session.id });
+                        alert(`Redirecting to Stripe checkout for ${selectedPlan.name}...`);
+                    } else if (method === 'paypal') {
+                        // PayPal API Integration
+                        // window.paypal.Buttons({
+                        //     createOrder: (data, actions) => {
+                        //         return actions.order.create({
+                        //             purchase_units: [{
+                        //                 amount: { value: selectedPlan.price.toString() }
+                        //             }]
+                        //         });
+                        //     },
+                        //     onApprove: async (data, actions) => {
+                        //         const order = await actions.order.capture();
+                        //         // Save subscription to backend
+                        //     }
+                        // }).render('#paypal-button-container');
+                        alert(`Redirecting to PayPal checkout for ${selectedPlan.name}...`);
+                    } else if (method === 'apple') {
+                        // Apple Pay API Integration
+                        // const paymentRequest = {
+                        //     countryCode: 'US',
+                        //     currencyCode: 'USD',
+                        //     total: {
+                        //         label: selectedPlan.name,
+                        //         amount: selectedPlan.price.toString()
+                        //     }
+                        // };
+                        // const session = new ApplePaySession(3, paymentRequest);
+                        // session.begin();
+                        alert(`Processing Apple Pay for ${selectedPlan.name}...`);
+                    } else if (method === 'google') {
+                        // Google Pay API Integration
+                        // const paymentsClient = new google.payments.api.PaymentsClient({
+                        //     environment: 'PRODUCTION'
+                        // });
+                        // const paymentDataRequest = { ... };
+                        // const paymentData = await paymentsClient.loadPaymentData(paymentDataRequest);
+                        alert(`Processing Google Pay for ${selectedPlan.name}...`);
+                    }
+
+                    // Simulate successful payment
+                    setTimeout(() => {
+                        setUserSubscription(selectedPlan.id);
+                        setShowPaymentModal(false);
+                        alert(`✅ Successfully subscribed to ${selectedPlan.name}!`);
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('Payment error:', error);
+                    alert('Payment failed. Please try again.');
+                }
+            };
+
+            if (showAuthModal) {
+                return (
+                    <div className="modal">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <div className="modal-logo">
+                                    <FireIcon size={64} />
+                                </div>
+                                <h1 className="modal-title">Welcome to FireLives</h1>
+                                <p className="modal-subtitle">
+                                    {authMode === 'welcome' && 'Sign up or log in to start listening'}
+                                    {authMode === 'login' && 'Log in to your account'}
+                                    {authMode === 'signup' && 'Create your account'}
+                                </p>
+                            </div>
+
+                            {authMode === 'welcome' && (
+                                <>
+                                    <div className="auth-buttons">
+                                        <button className="auth-btn" onClick={() => handleAuth('google')}>
+                                            <GoogleIcon /> Continue with Google
+                                        </button>
+                                        <button className="auth-btn" onClick={() => handleAuth('facebook')}>
+                                            <FacebookIcon /> Continue with Facebook
+                                        </button>
+                                        <button className="auth-btn" onClick={() => handleAuth('apple')}>
+                                            <AppleIcon /> Continue with Apple
+                                        </button>
+                                    </div>
+
+                                    <div className="divider">OR</div>
+
+                                    <div className="auth-buttons">
+                                        <button className="auth-btn primary" onClick={() => setAuthMode('signup')}>
+                                            Sign up with email
+                                        </button>
+                                        <button className="auth-btn" onClick={() => setAuthMode('login')}>
+                                            Log in
+                                        </button>
+                                    </div>
+
+                                    <div style={{ marginTop: '24px', textAlign: 'center' }}>
+                                        <select 
+                                            value={language} 
+                                            onChange={(e) => setLanguage(e.target.value)}
+                                            style={{ 
+                                                background: 'var(--bg-base)', 
+                                                color: 'var(--text-base)', 
+                                                border: '1px solid var(--border)',
+                                                padding: '8px 16px',
+                                                borderRadius: '8px',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            <option value="en">English</option>
+                                            <option value="zh">中文</option>
+                                            <option value="es">Español</option>
+                                            <option value="fr">Français</option>
+                                            <option value="de">Deutsch</option>
+                                            <option value="ja">日本語</option>
+                                        </select>
+                                    </div>
+                                </>
+                            )}
+
+                            {authMode === 'login' && (
+                                <>
+                                    <div className="form-group">
+                                        <label className="form-label">Email or username</label>
+                                        <input type="text" className="form-input" placeholder="Email or username" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Password</label>
+                                        <input type="password" className="form-input" placeholder="Password" />
+                                    </div>
+                                    <button className="auth-btn primary" onClick={() => handleAuth('email')} style={{ width: '100%', marginBottom: '16px' }}>
+                                        Log in
+                                    </button>
+                                    <div style={{ textAlign: 'center' }}>
+                                        <span className="form-link" onClick={() => setAuthMode('welcome')}>Back</span>
+                                    </div>
+                                </>
+                            )}
+
+                            {authMode === 'signup' && (
+                                <>
+                                    <div className="form-group">
+                                        <label className="form-label">Email</label>
+                                        <input type="email" className="form-input" placeholder="name@domain.com" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Create password</label>
+                                        <input type="password" className="form-input" placeholder="Password" />
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="form-label">Username</label>
+                                        <input type="text" className="form-input" placeholder="Username" />
+                                    </div>
+                                    <button className="auth-btn primary" onClick={() => handleAuth('email')} style={{ width: '100%', marginBottom: '16px' }}>
+                                        Sign up
+                                    </button>
+                                    <div style={{ textAlign: 'center' }}>
+                                        <span className="form-link" onClick={() => setAuthMode('welcome')}>Back</span>
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="app">
+                    {/* Sidebar */}
+                    <div className={`sidebar ${!sidebarOpen ? 'hidden' : ''}`}>
+                        <div className="sidebar-header">
+                            <FireIcon size={32} />
+                            <h1>FireLives</h1>
+                        </div>
+
+                        <div className="sidebar-nav">
+                            <div className={`nav-item ${currentPage === 'home' ? 'active' : ''}`} onClick={() => setCurrentPage('home')}>
+                                <HomeIcon />
+                                <span>{t.home}</span>
+                            </div>
+                            <div className={`nav-item ${currentPage === 'search' ? 'active' : ''}`} onClick={() => setCurrentPage('search')}>
+                                <SearchIcon />
+                                <span>{t.search}</span>
+                            </div>
+                            <div className={`nav-item ${currentPage === 'videos' ? 'active' : ''}`} onClick={() => setCurrentPage('videos')}>
+                                <VideoIcon />
+                                <span>Videos</span>
+                            </div>
+                            <div className={`nav-item ${currentPage === 'lives' ? 'active' : ''}`} onClick={() => setCurrentPage('lives')}>
+                                <LiveIcon />
+                                <span>Lives</span>
+                            </div>
+                            <div className={`nav-item ${currentPage === 'library' ? 'active' : ''}`} onClick={() => setCurrentPage('library')}>
+                                <LibraryIcon />
+                                <span>{t.library}</span>
+                            </div>
+                            <div className={`nav-item ${currentPage === 'premium' ? 'active' : ''}`} onClick={() => setCurrentPage('premium')}>
+                                <PremiumIcon />
+                                <span>{t.premium}</span>
+                                {userSubscription && <span className="current-plan-badge">{premiumPlans.find(p => p.id === userSubscription)?.name}</span>}
+                            </div>
+                        </div>
+
+                        <div className="sidebar-user">
+                            <div className="user-avatar">{user?.avatar}</div>
+                            <div className="user-info">
+                                <div className="user-name">{user?.name}</div>
+                                <div className="user-email">{user?.email}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Main Container */}
+                    <div className="main-container">
+                        {/* Top Bar */}
+                        <div className="topbar">
+                            <div className="topbar-left">
+                                <button className="menu-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
+                                    <MenuIcon />
+                                </button>
+                                <div className="search-container">
+                                    <SearchIcon />
+                                    <input 
+                                        type="text" 
+                                        className="search-input" 
+                                        placeholder="Search for songs, artists, albums..."
+                                        value={searchQuery}
+                                        onChange={(e) => {
+                                            setSearchQuery(e.target.value);
+                                            if (e.target.value) setCurrentPage('search');
+                                        }}
+                                    />
+                                    {availableCountries.length > 0 && (
+                                        <select 
+                                            value={selectedCountry}
+                                            onChange={(e) => {
+                                                setSelectedCountry(e.target.value);
+                                                if (searchQuery) handleSearch(searchQuery);
+                                            }}
+                                            style={{
+                                                background: 'transparent',
+                                                color: 'var(--text-base)',
+                                                border: 'none',
+                                                outline: 'none',
+                                                fontSize: '14px',
+                                                cursor: 'pointer',
+                                                padding: '4px'
+                                            }}
+                                            title="Select country for music search"
+                                        >
+                                            {availableCountries.map(country => (
+                                                <option key={country.code} value={country.code}>
+                                                    {country.flag} {country.code.toUpperCase()}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="topbar-right">
+                                <button className="icon-btn">
+                                    <BellIcon />
+                                </button>
+                                <button className="icon-btn" onClick={() => setCurrentPage('settings')}>
+                                    <SettingsIcon />
+                                </button>
+                                <div style={{ position: 'relative' }}>
+                                    <button className="user-menu-btn" onClick={() => setShowUserMenu(!showUserMenu)}>
+                                        <div className="user-menu-avatar">{user?.avatar}</div>
+                                        <span className="user-menu-name">{user?.name}</span>
+                                    </button>
+                                    <div className={`dropdown-menu ${showUserMenu ? 'show' : ''}`}>
+                                        <div className="dropdown-item" onClick={() => setCurrentPage('settings')}>
+                                            <SettingsIcon /> {t.settings}
+                                        </div>
+                                        <div className="dropdown-divider"></div>
+                                        <div className="dropdown-item" onClick={handleLogout}>
+                                            {t.logout}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="content">
+                            {/* Home Page */}
+                            <div className={`page ${currentPage === 'home' ? 'active' : ''}`}>
+                                <h1 className="page-title">Good evening</h1>
+
+                                <div className="section">
+                                    <div className="section-header">
+                                        <h2 className="section-title">Electronic</h2>
+                                        <span className="see-all">See all</span>
+                                    </div>
+                                    <div className="cards-row">
+                                        {getStreamsByCategory('Electronic').map(stream => {
+                                            const vipBadge = getVipBadgeInfo(stream.vipTier);
+                                            const isLocked = !canAccessTrack(stream);
+                                            return (
+                                                <div key={stream.id} className="stream-card" onClick={() => playStream(stream)}>
+                                                    <div className="stream-thumbnail">
+                                                        {stream.thumbnail ? (
+                                                            <img src={stream.thumbnail} alt={stream.title} />
+                                                        ) : (
+                                                            <div className="thumbnail-placeholder">
+                                                                <MusicIcon />
+                                                            </div>
+                                                        )}
+                                                        {vipBadge && (
+                                                            <div className={`vip-badge ${vipBadge.class}`}>
+                                                                <span>{vipBadge.icon}</span>
+                                                                <span>{vipBadge.name}</span>
+                                                            </div>
+                                                        )}
+                                                        {isLocked && (
+                                                            <div className="locked-overlay">🔒</div>
+                                                        )}
+                                                        <button className={`play-button ${currentStream?.id === stream.id && isPlaying ? 'playing' : ''}`}>
+                                                            {currentStream?.id === stream.id && isPlaying ? <PauseIcon /> : <PlayIcon />}
+                                                        </button>
+                                                    </div>
+                                                    <h3 className="stream-title">{stream.title}</h3>
+                                                    <p className="stream-author">{stream.author}</p>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                <div className="section">
+                                    <div className="section-header">
+                                        <h2 className="section-title">Rock</h2>
+                                        <span className="see-all">See all</span>
+                                    </div>
+                                    <div className="cards-row">
+                                        {getStreamsByCategory('Rock').map(stream => {
+                                            const vipBadge = getVipBadgeInfo(stream.vipTier);
+                                            const isLocked = !canAccessTrack(stream);
+                                            return (
+                                                <div key={stream.id} className="stream-card" onClick={() => playStream(stream)}>
+                                                    <div className="stream-thumbnail">
+                                                        {stream.thumbnail ? (
+                                                            <img src={stream.thumbnail} alt={stream.title} />
+                                                        ) : (
+                                                            <div className="thumbnail-placeholder">
+                                                                <MusicIcon />
+                                                            </div>
+                                                        )}
+                                                        {vipBadge && (
+                                                            <div className={`vip-badge ${vipBadge.class}`}>
+                                                                <span>{vipBadge.icon}</span>
+                                                                <span>{vipBadge.name}</span>
+                                                            </div>
+                                                        )}
+                                                        {isLocked && (
+                                                            <div className="locked-overlay">🔒</div>
+                                                        )}
+                                                        <button className={`play-button ${currentStream?.id === stream.id && isPlaying ? 'playing' : ''}`}>
+                                                            {currentStream?.id === stream.id && isPlaying ? <PauseIcon /> : <PlayIcon />}
+                                                        </button>
+                                                    </div>
+                                                    <h3 className="stream-title">{stream.title}</h3>
+                                                    <p className="stream-author">{stream.author}</p>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                <div className="section">
+                                    <div className="section-header">
+                                        <h2 className="section-title">Jazz</h2>
+                                        <span className="see-all">See all</span>
+                                    </div>
+                                    <div className="cards-row">
+                                        {getStreamsByCategory('Jazz').map(stream => {
+                                            const vipBadge = getVipBadgeInfo(stream.vipTier);
+                                            const isLocked = !canAccessTrack(stream);
+                                            return (
+                                                <div key={stream.id} className="stream-card" onClick={() => playStream(stream)}>
+                                                    <div className="stream-thumbnail">
+                                                        {stream.thumbnail ? (
+                                                            <img src={stream.thumbnail} alt={stream.title} />
+                                                        ) : (
+                                                            <div className="thumbnail-placeholder">
+                                                                <MusicIcon />
+                                                            </div>
+                                                        )}
+                                                        {vipBadge && (
+                                                            <div className={`vip-badge ${vipBadge.class}`}>
+                                                                <span>{vipBadge.icon}</span>
+                                                                <span>{vipBadge.name}</span>
+                                                            </div>
+                                                        )}
+                                                        {isLocked && (
+                                                            <div className="locked-overlay">🔒</div>
+                                                        )}
+                                                        <button className={`play-button ${currentStream?.id === stream.id && isPlaying ? 'playing' : ''}`}>
+                                                            {currentStream?.id === stream.id && isPlaying ? <PauseIcon /> : <PlayIcon />}
+                                                        </button>
+                                                    </div>
+                                                    <h3 className="stream-title">{stream.title}</h3>
+                                                    <p className="stream-author">{stream.author}</p>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Search Page */}
+                            <div className={`page ${currentPage === 'search' ? 'active' : ''}`}>
+                                <h1 className="page-title">{t.search}</h1>
+                                
+                                {isSearching && (
+                                    <p style={{ color: 'var(--text-subdued)', marginTop: '24px' }}>
+                                        🔍 Searching for "{searchQuery}"...
+                                    </p>
+                                )}
+                                
+                                {!searchQuery && !isSearching && (
+                                    <p style={{ color: 'var(--text-subdued)', marginTop: '24px' }}>
+                                        Search for songs, artists, albums, and more...
+                                    </p>
+                                )}
+                                
+                                {searchQuery && !isSearching && searchResults.length === 0 && (
+                                    <p style={{ color: 'var(--text-subdued)', marginTop: '24px' }}>
+                                        No results found for "{searchQuery}"
+                                    </p>
+                                )}
+                                
+                                {searchResults.length > 0 && (
+                                    <div className="section">
+                                        <div className="section-header">
+                                            <h2 className="section-title">
+                                                Results for "{searchQuery}" ({searchResults.length})
+                                            </h2>
+                                        </div>
+                                        <div className="cards-row" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))' }}>
+                                            {searchResults.map(track => {
+                                                const vipBadge = getVipBadgeInfo(track.vipTier);
+                                                const isLocked = !canAccessTrack(track);
+                                                return (
+                                                    <div key={track.id} className="stream-card" onClick={() => playStream(track)}>
+                                                        <div className="stream-thumbnail">
+                                                            {track.thumbnail ? (
+                                                                <img src={track.thumbnail} alt={track.title} />
+                                                            ) : (
+                                                                <div className="thumbnail-placeholder">
+                                                                    <MusicIcon />
+                                                                </div>
+                                                            )}
+                                                            {vipBadge && (
+                                                                <div className={`vip-badge ${vipBadge.class}`}>
+                                                                    <span>{vipBadge.icon}</span>
+                                                                    <span>{vipBadge.name}</span>
+                                                                </div>
+                                                            )}
+                                                            {isLocked && (
+                                                                <div className="locked-overlay">🔒</div>
+                                                            )}
+                                                            <button className={`play-button ${currentStream?.id === track.id && isPlaying ? 'playing' : ''}`}>
+                                                                {currentStream?.id === track.id && isPlaying ? <PauseIcon /> : <PlayIcon />}
+                                                            </button>
+                                                        </div>
+                                                        <h3 className="stream-title">{track.title}</h3>
+                                                        <p className="stream-author">{track.author}</p>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Library Page - ENHANCED with Saved Content */}
+                            <div className={`page ${currentPage === 'library' ? 'active' : ''}`}>
+                                <h1 className="page-title">📚 {t.library}</h1>
+                                <p style={{ color: 'var(--text-subdued)', marginBottom: '32px' }}>
+                                    Your saved music collection
+                                </p>
+
+                                {/* Saved Songs */}
+                                {library.songs.length > 0 && (
+                                    <div className="section">
+                                        <div className="section-header">
+                                            <h2 className="section-title">❤️ Liked Songs ({library.songs.length})</h2>
+                                        </div>
+                                        <div className="cards-row" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))' }}>
+                                            {library.songs.map(song => (
+                                                <div key={song.id} className="stream-card" onClick={() => playStream(song)}>
+                                                    <div className="stream-thumbnail">
+                                                        {song.thumbnail ? (
+                                                            <img src={song.thumbnail} alt={song.title} />
+                                                        ) : (
+                                                            <div className="thumbnail-placeholder">
+                                                                <MusicIcon />
+                                                            </div>
+                                                        )}
+                                                        <button className={`play-button ${currentStream?.id === song.id && isPlaying ? 'playing' : ''}`}>
+                                                            {currentStream?.id === song.id && isPlaying ? <PauseIcon /> : <PlayIcon />}
+                                                        </button>
+                                                    </div>
+                                                    <h3 className="stream-title">{song.title}</h3>
+                                                    <p className="stream-author">{song.author}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Saved Albums */}
+                                {library.albums.length > 0 && (
+                                    <div className="section">
+                                        <div className="section-header">
+                                            <h2 className="section-title">💿 Albums ({library.albums.length})</h2>
+                                        </div>
+                                        <div className="cards-row">
+                                            {library.albums.map(album => (
+                                                <div key={album.id} className="stream-card">
+                                                    <div className="stream-thumbnail">
+                                                        {album.cover ? (
+                                                            <img src={album.cover} alt={album.title} />
+                                                        ) : (
+                                                            <div className="thumbnail-placeholder">
+                                                                <MusicIcon />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <h3 className="stream-title">{album.title}</h3>
+                                                    <p className="stream-author">{album.artist}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Saved Artists */}
+                                {library.artists.length > 0 && (
+                                    <div className="section">
+                                        <div className="section-header">
+                                            <h2 className="section-title">🎤 Artists ({library.artists.length})</h2>
+                                        </div>
+                                        <div className="cards-row">
+                                            {library.artists.map(artist => (
+                                                <div key={artist.id} className="stream-card">
+                                                    <div className="stream-thumbnail" style={{ borderRadius: '50%' }}>
+                                                        {artist.picture ? (
+                                                            <img src={artist.picture} alt={artist.name} style={{ borderRadius: '50%' }} />
+                                                        ) : (
+                                                            <div className="thumbnail-placeholder">
+                                                                <MusicIcon />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <h3 className="stream-title">{artist.name}</h3>
+                                                    <p className="stream-author">Artist</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Saved Playlists */}
+                                {library.playlists.length > 0 && (
+                                    <div className="section">
+                                        <div className="section-header">
+                                            <h2 className="section-title">📝 Playlists ({library.playlists.length})</h2>
+                                        </div>
+                                        <div className="cards-row">
+                                            {library.playlists.map(playlist => (
+                                                <div key={playlist.id} className="stream-card">
+                                                    <div className="stream-thumbnail">
+                                                        {playlist.cover ? (
+                                                            <img src={playlist.cover} alt={playlist.title} />
+                                                        ) : (
+                                                            <div className="thumbnail-placeholder">
+                                                                <MusicIcon />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <h3 className="stream-title">{playlist.title}</h3>
+                                                    <p className="stream-author">{playlist.trackCount} tracks</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Empty State */}
+                                {library.songs.length === 0 && library.albums.length === 0 && 
+                                 library.artists.length === 0 && library.playlists.length === 0 && (
+                                    <div style={{ 
+                                        textAlign: 'center', 
+                                        padding: '64px 32px',
+                                        color: 'var(--text-subdued)'
+                                    }}>
+                                        <div style={{ fontSize: '64px', marginBottom: '16px' }}>📚</div>
+                                        <h2 style={{ fontSize: '24px', marginBottom: '8px', color: 'var(--text-base)' }}>
+                                            Your library is empty
+                                        </h2>
+                                        <p>Start adding songs by clicking the ❤️ heart icon while playing music!</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Settings Page */}
+                            <div className={`page ${currentPage === 'settings' ? 'active' : ''}`}>
+                                <h1 className="page-title">{t.settings}</h1>
+                                <div className="form-group">
+                                    <label className="form-label">Language</label>
+                                    <select 
+                                        value={language} 
+                                        onChange={(e) => setLanguage(e.target.value)}
+                                        className="form-input"
+                                    >
+                                        <option value="en">English</option>
+                                        <option value="zh">中文</option>
+                                        <option value="es">Español</option>
+                                        <option value="fr">Français</option>
+                                        <option value="de">Deutsch</option>
+                                        <option value="ja">日本語</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Videos Page */}
+                            <div className={`page ${currentPage === 'videos' ? 'active' : ''}`}>
+                                <h1 className="page-title">🎬 Videos</h1>
+                                <p style={{ color: 'var(--text-subdued)', marginBottom: '32px' }}>
+                                    Watch music videos, live performances, and exclusive content
+                                </p>
+
+                                <div className="section">
+                                    <div className="section-header">
+                                        <h2 className="section-title">Trending Music Videos</h2>
+                                    </div>
+                                    <div className="cards-row">
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Never Gonna Give You Up" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Never Gonna Give You Up</div>
+                                            <div className="stream-author">Rick Astley</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=kJQP7kiw5Fk', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <img src="https://i.ytimg.com/vi/kJQP7kiw5Fk/maxresdefault.jpg" alt="Despacito" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Despacito</div>
+                                            <div className="stream-author">Luis Fonsi ft. Daddy Yankee</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=9bZkp7q19f0', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <img src="https://i.ytimg.com/vi/9bZkp7q19f0/maxresdefault.jpg" alt="Gangnam Style" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Gangnam Style</div>
+                                            <div className="stream-author">PSY</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="section">
+                                    <div className="section-header">
+                                        <h2 className="section-title">Live Performances</h2>
+                                    </div>
+                                    <div className="cards-row">
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=QDYfEBY9NM4', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <img src="https://i.ytimg.com/vi/QDYfEBY9NM4/maxresdefault.jpg" alt="Live Performance" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Live at Wembley</div>
+                                            <div className="stream-author">Queen</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.bilibili.com/video/BV1xx411c7mu', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <img src="https://i0.hdslb.com/bfs/archive/5a6e8c3e8e5c8e5c8e5c8e5c8e5c8e5c8e5c8e5c.jpg" alt="Bilibili Concert" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Virtual Concert 2024</div>
+                                            <div className="stream-author">Bilibili Music</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=fRh_vgS2dFE', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <img src="https://i.ytimg.com/vi/fRh_vgS2dFE/maxresdefault.jpg" alt="Coachella" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Coachella 2023</div>
+                                            <div className="stream-author">Various Artists</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="section">
+                                    <div className="section-header">
+                                        <h2 className="section-title">Anime & Gaming Music</h2>
+                                    </div>
+                                    <div className="cards-row">
+                                        <div className="stream-card" onClick={() => window.open('https://www.bilibili.com/video/BV1uT4y1P7CX', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="thumbnail-placeholder">
+                                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                                    </svg>
+                                                </div>
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Anime OST Collection</div>
+                                            <div className="stream-author">Bilibili</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=NvS351QKFV4', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <img src="https://i.ytimg.com/vi/NvS351QKFV4/maxresdefault.jpg" alt="Video Game Music" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Epic Gaming Music Mix</div>
+                                            <div className="stream-author">Gaming Music</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=wJWksPWDKOc', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <img src="https://i.ytimg.com/vi/wJWksPWDKOc/maxresdefault.jpg" alt="Genshin Impact" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Genshin Impact OST</div>
+                                            <div className="stream-author">miHoYo Music</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Lives Page */}
+                            <div className={`page ${currentPage === 'lives' ? 'active' : ''}`}>
+                                <h1 className="page-title">🔴 Live Streams</h1>
+                                <p style={{ color: 'var(--text-subdued)', marginBottom: '32px' }}>
+                                    Watch live concerts, DJ sets, and music events happening right now
+                                </p>
+
+                                <div className="section">
+                                    <div className="section-header">
+                                        <h2 className="section-title">🔴 Live Now</h2>
+                                    </div>
+                                    <div className="cards-row">
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=jfKfPfyJRdk', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="vip-badge" style={{ background: 'rgba(255, 0, 0, 0.9)' }}>
+                                                    🔴 LIVE
+                                                </div>
+                                                <img src="https://i.ytimg.com/vi/jfKfPfyJRdk/maxresdefault.jpg" alt="Lofi Girl" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">lofi hip hop radio 📚</div>
+                                            <div className="stream-author">Lofi Girl</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=5qap5aO4i9A', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="vip-badge" style={{ background: 'rgba(255, 0, 0, 0.9)' }}>
+                                                    🔴 LIVE
+                                                </div>
+                                                <img src="https://i.ytimg.com/vi/5qap5aO4i9A/maxresdefault.jpg" alt="ChilledCow" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">lofi hip hop radio - beats to sleep/chill to</div>
+                                            <div className="stream-author">Lofi Girl</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.bilibili.com/video/BV1Wx411w7KC', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="vip-badge" style={{ background: 'rgba(255, 0, 0, 0.9)' }}>
+                                                    🔴 LIVE
+                                                </div>
+                                                <div className="thumbnail-placeholder">
+                                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                                    </svg>
+                                                </div>
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">24/7 Music Live Stream</div>
+                                            <div className="stream-author">Bilibili Music</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="section">
+                                    <div className="section-header">
+                                        <h2 className="section-title">DJ Sets & Electronic</h2>
+                                    </div>
+                                    <div className="cards-row">
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=36YnV9STBqc', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="vip-badge" style={{ background: 'rgba(255, 0, 0, 0.9)' }}>
+                                                    🔴 LIVE
+                                                </div>
+                                                <img src="https://i.ytimg.com/vi/36YnV9STBqc/maxresdefault.jpg" alt="Deep House" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Deep House 24/7 Radio</div>
+                                            <div className="stream-author">Deep House Nation</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=MVPTGNGiI-4', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="vip-badge" style={{ background: 'rgba(255, 0, 0, 0.9)' }}>
+                                                    🔴 LIVE
+                                                </div>
+                                                <img src="https://i.ytimg.com/vi/MVPTGNGiI-4/maxresdefault.jpg" alt="Techno" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Techno Live Set</div>
+                                            <div className="stream-author">Techno Live Sets</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=l-QVmsqetB8', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="vip-badge" style={{ background: 'rgba(255, 0, 0, 0.9)' }}>
+                                                    🔴 LIVE
+                                                </div>
+                                                <img src="https://i.ytimg.com/vi/l-QVmsqetB8/maxresdefault.jpg" alt="Trance" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Trance Music 24/7</div>
+                                            <div className="stream-author">Trance Family</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="section">
+                                    <div className="section-header">
+                                        <h2 className="section-title">Jazz & Classical</h2>
+                                    </div>
+                                    <div className="cards-row">
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=Dx5qFachd3A', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="vip-badge" style={{ background: 'rgba(255, 0, 0, 0.9)' }}>
+                                                    🔴 LIVE
+                                                </div>
+                                                <img src="https://i.ytimg.com/vi/Dx5qFachd3A/maxresdefault.jpg" alt="Jazz" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Smooth Jazz 24/7</div>
+                                            <div className="stream-author">Jazz Cafe</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=jgpJVI3tDbY', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="vip-badge" style={{ background: 'rgba(255, 0, 0, 0.9)' }}>
+                                                    🔴 LIVE
+                                                </div>
+                                                <img src="https://i.ytimg.com/vi/jgpJVI3tDbY/maxresdefault.jpg" alt="Classical" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Classical Music 24/7</div>
+                                            <div className="stream-author">Classical Tunes</div>
+                                        </div>
+                                        <div className="stream-card" onClick={() => window.open('https://www.youtube.com/watch?v=4oStw0r33so', '_blank')}>
+                                            <div className="stream-thumbnail">
+                                                <div className="vip-badge" style={{ background: 'rgba(255, 0, 0, 0.9)' }}>
+                                                    🔴 LIVE
+                                                </div>
+                                                <img src="https://i.ytimg.com/vi/4oStw0r33so/maxresdefault.jpg" alt="Piano" />
+                                                <button className="play-button">
+                                                    <PlayIcon />
+                                                </button>
+                                            </div>
+                                            <div className="stream-title">Relaxing Piano Music</div>
+                                            <div className="stream-author">Piano Relaxing</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Premium Page */}
+                            <div className={`page ${currentPage === 'premium' ? 'active' : ''}`}>
+                                <div className="premium-header">
+                                    <h1>{t.upgradePremium}</h1>
+                                    <p>{t.choosePlan}</p>
+                                </div>
+
+                                <div className="plans-grid">
+                                    {premiumPlans.map(plan => (
+                                        <div 
+                                            key={plan.id} 
+                                            className={`plan-card ${plan.popular ? 'popular' : ''}`}
+                                            onClick={() => userSubscription !== plan.id && handleSelectPlan(plan)}
+                                        >
+                                            {plan.popular && <div className="plan-badge">Most Popular</div>}
+                                            
+                                            <div className="plan-icon">{plan.icon}</div>
+                                            <div className="plan-name">{plan.name}</div>
+                                            <div className="plan-price">
+                                                ${plan.price}<span>{t.perMonth}</span>
+                                            </div>
+                                            <div className="plan-period">Billed monthly</div>
+                                            
+                                            <ul className="plan-features">
+                                                {plan.features.map((feature, idx) => (
+                                                    <li key={idx}>
+                                                        <span className="feature-check">✓</span>
+                                                        {feature}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                            
+                                            {userSubscription === plan.id ? (
+                                                <button className="plan-button secondary" disabled>
+                                                    {t.currentPlan}
+                                                </button>
+                                            ) : (
+                                                <button className="plan-button">
+                                                    {t.subscribe}
+                                                </button>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Payment Modal */}
+                    {showPaymentModal && selectedPlan && (
+                        <div className="payment-modal" onClick={() => setShowPaymentModal(false)}>
+                            <div className="payment-content" onClick={(e) => e.stopPropagation()}>
+                                <div className="payment-header">
+                                    <h2>{t.selectPayment}</h2>
+                                    <p style={{ color: 'var(--text-subdued)' }}>Complete your subscription to {selectedPlan.name}</p>
+                                </div>
+
+                                <div className="payment-summary">
+                                    <div className="payment-summary-row">
+                                        <span>Plan:</span>
+                                        <span>{selectedPlan.name}</span>
+                                    </div>
+                                    <div className="payment-summary-row">
+                                        <span>Billing:</span>
+                                        <span>Monthly</span>
+                                    </div>
+                                    <div className="payment-summary-row total">
+                                        <span>Total:</span>
+                                        <span>${selectedPlan.price}/month</span>
+                                    </div>
+                                </div>
+
+                                <div className="payment-methods">
+                                    <button className="payment-method-btn" onClick={() => handlePayment('stripe')}>
+                                        <CreditCardIcon />
+                                        <span>Pay with Stripe</span>
+                                    </button>
+                                    <button className="payment-method-btn" onClick={() => handlePayment('paypal')}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="#00457C">
+                                            <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 00-.794.68l-.04.22-.63 3.993-.028.15a.805.805 0 01-.794.68H7.72a.483.483 0 01-.477-.558L8.926 13.7a.805.805 0 01.794-.68h2.344c3.238 0 5.774-1.314 6.514-5.12.257-1.313.193-2.447-.3-3.327a2.955 2.955 0 00-.578-.706 5.186 5.186 0 011.367 4.611z"/>
+                                        </svg>
+                                        <span>Pay with PayPal</span>
+                                    </button>
+                                    <button className="payment-method-btn" onClick={() => handlePayment('apple')}>
+                                        <AppleIcon />
+                                        <span>Pay with Apple Pay</span>
+                                    </button>
+                                    <button className="payment-method-btn" onClick={() => handlePayment('google')}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24">
+                                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                        </svg>
+                                        <span>Pay with Google Pay</span>
+                                    </button>
+                                </div>
+
+                                <button className="payment-close" onClick={() => setShowPaymentModal(false)}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Mini Player - ENHANCED with Progress Bar, Seek, Library, Bluetooth */}
+                    <div className={`mini-player ${currentStream ? 'visible' : ''}`}>
+                        {/* Progress Bar */}
+                        <div 
+                            className="progress-bar-container" 
+                            onClick={handleSeekEnd}
+                            onMouseDown={handleSeekStart}
+                            style={{ 
+                                position: 'absolute', 
+                                top: 0, 
+                                left: 0, 
+                                right: 0, 
+                                height: '4px', 
+                                background: 'var(--border)', 
+                                cursor: 'pointer',
+                                zIndex: 10
+                            }}
+                        >
+                            {/* Buffered Progress */}
+                            <div 
+                                style={{ 
+                                    position: 'absolute', 
+                                    height: '100%', 
+                                    background: 'rgba(255, 255, 255, 0.3)', 
+                                    width: `${buffered}%`,
+                                    transition: 'width 0.3s'
+                                }} 
+                            />
+                            {/* Current Progress */}
+                            <div 
+                                style={{ 
+                                    position: 'absolute', 
+                                    height: '100%', 
+                                    background: 'var(--red)', 
+                                    width: `${(currentTime / duration) * 100 || 0}%`,
+                                    transition: isSeeking ? 'none' : 'width 0.1s'
+                                }} 
+                            />
+                        </div>
+
+                        <div className="mini-player-info">
+                            <div className="mini-player-thumbnail">
+                                {currentStream?.thumbnail ? (
+                                    <img src={currentStream.thumbnail} alt={currentStream.title} />
+                                ) : (
+                                    <FireIcon size={32} />
+                                )}
+                            </div>
+                            <div className="mini-player-details">
+                                <div className="mini-player-title">{currentStream?.title || 'No station'}</div>
+                                <div className="mini-player-author">{currentStream?.author || '---'}</div>
+                            </div>
+                            {/* Heart Button - Add to Library */}
+                            <button 
+                                className="control-btn"
+                                onClick={() => {
+                                    if (currentStream) {
+                                        if (isInLibrary(currentStream.id, 'songs')) {
+                                            removeFromLibrary(currentStream.id, 'songs');
+                                        } else {
+                                            addToLibrary(currentStream, 'songs');
+                                        }
+                                    }
+                                }}
+                                style={{ marginLeft: '8px' }}
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill={isInLibrary(currentStream?.id, 'songs') ? 'var(--red)' : 'none'} stroke="currentColor" strokeWidth="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div className="mini-player-controls">
+                            {/* Time Display */}
+                            <span style={{ color: 'var(--text-subdued)', fontSize: '12px', minWidth: '80px' }}>
+                                {formatTime(currentTime)} / {formatTime(duration)}
+                            </span>
+
+                            {/* Previous Button */}
+                            <button className="control-btn" onClick={playPrevious} title="Previous">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                                </svg>
+                            </button>
+
+                            {/* Play/Pause Button */}
+                            <button className="control-btn play-pause" onClick={togglePlayPause}>
+                                {isPlaying ? <PauseIcon /> : <PlayIcon />}
+                            </button>
+
+                            {/* Next Button */}
+                            <button className="control-btn" onClick={playNext} title="Next">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                                </svg>
+                            </button>
+
+                            {/* Play Order Button */}
+                            <button 
+                                className="control-btn" 
+                                onClick={togglePlayOrder}
+                                title={playOrder === 'sequential' ? 'Sequential' : playOrder === 'shuffle' ? 'Shuffle' : playOrder === 'repeat-all' ? 'Repeat All' : 'Repeat One'}
+                                style={{ color: playOrder !== 'sequential' ? 'var(--red)' : 'var(--text-base)' }}
+                            >
+                                {playOrder === 'shuffle' ? (
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
+                                    </svg>
+                                ) : playOrder === 'repeat-all' ? (
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>
+                                    </svg>
+                                ) : playOrder === 'repeat-one' ? (
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zm-3-4h-1v-1.5h-.5v-1h1.5V15z"/>
+                                    </svg>
+                                ) : (
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                                        <path d="M12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z"/>
+                                    </svg>
+                                )}
+                            </button>
+                            
+                            {/* Volume Control */}
+                            <div className="volume-control">
+                                <VolumeIcon />
+                                <input
+                                    type="range"
+                                    className="volume-slider"
+                                    min="0"
+                                    max="100"
+                                    value={volume}
+                                    onChange={(e) => {
+                                        const v = parseInt(e.target.value);
+                                        setVolume(v);
+                                        if (audioRef.current) audioRef.current.volume = v / 100;
+                                    }}
+                                />
+                                <span style={{ color: 'var(--text-subdued)', fontSize: '12px', minWidth: '36px' }}>{volume}%</span>
+                            </div>
+
+                            {/* Bluetooth Button */}
+                            <button 
+                                className="control-btn"
+                                onClick={() => setShowBluetoothModal(true)}
+                                style={{ 
+                                    color: connectedDevice ? 'var(--red)' : 'var(--text-base)',
+                                    marginLeft: '8px'
+                                }}
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Bluetooth Modal */}
+                    {showBluetoothModal && (
+                        <div className="payment-modal" onClick={() => setShowBluetoothModal(false)}>
+                            <div className="payment-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+                                <div className="payment-header">
+                                    <h2>📱 Bluetooth Devices</h2>
+                                    <p style={{ color: 'var(--text-subdued)' }}>Connect to wireless audio devices</p>
+                                </div>
+
+                                {connectedDevice && (
+                                    <div style={{ 
+                                        padding: '16px', 
+                                        background: 'var(--bg-highlight)', 
+                                        borderRadius: '8px', 
+                                        marginBottom: '16px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between'
+                                    }}>
+                                        <div>
+                                            <div style={{ fontWeight: 600 }}>✅ Connected: {connectedDevice.name}</div>
+                                            {connectedDevice.battery && (
+                                                <div style={{ fontSize: '12px', color: 'var(--text-subdued)', marginTop: '4px' }}>
+                                                    🔋 Battery: {connectedDevice.battery}%
+                                                </div>
+                                            )}
+                                        </div>
+                                        <button 
+                                            className="payment-method-btn" 
+                                            onClick={disconnectBluetooth}
+                                            style={{ width: 'auto', padding: '8px 16px' }}
+                                        >
+                                            Disconnect
+                                        </button>
+                                    </div>
+                                )}
+
+                                <div style={{ marginBottom: '16px' }}>
+                                    <button 
+                                        className="payment-method-btn" 
+                                        onClick={scanBluetoothDevices}
+                                        style={{ width: '100%' }}
+                                    >
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                        </svg>
+                                        <span>Scan for Devices</span>
+                                    </button>
+                                </div>
+
+                                {bluetoothDevices.length > 0 && (
+                                    <div>
+                                        <h3 style={{ marginBottom: '12px', fontSize: '14px', color: 'var(--text-subdued)' }}>
+                                            Available Devices
+                                        </h3>
+                                        {bluetoothDevices.map(device => (
+                                            <div 
+                                                key={device.id}
+                                                style={{ 
+                                                    padding: '12px', 
+                                                    background: device.connected ? 'var(--bg-highlight)' : 'transparent',
+                                                    borderRadius: '8px', 
+                                                    marginBottom: '8px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    border: '1px solid var(--border)'
+                                                }}
+                                            >
+                                                <div>
+                                                    <div style={{ fontWeight: 600 }}>{device.name}</div>
+                                                    {device.battery && (
+                                                        <div style={{ fontSize: '12px', color: 'var(--text-subdued)', marginTop: '4px' }}>
+                                                            🔋 {device.battery}%
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                {!device.connected && (
+                                                    <button 
+                                                        className="payment-method-btn" 
+                                                        onClick={() => connectBluetooth(device)}
+                                                        style={{ width: 'auto', padding: '8px 16px' }}
+                                                    >
+                                                        Connect
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <button 
+                                    className="payment-close" 
+                                    onClick={() => setShowBluetoothModal(false)}
+                                    style={{ marginTop: '16px' }}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    <audio ref={audioRef} />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

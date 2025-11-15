@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Duration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-card {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .info {
+            background: #3a3a3a;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        button {
+            background: #e13238;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #ff4444;
+        }
+        .progress {
+            width: 100%;
+            height: 4px;
+            background: #444;
+            border-radius: 2px;
+            margin: 10px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #e13238;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s;
+        }
+        .warning {
+            background: #ff9800;
+            color: #000;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .success {
+            background: #4caf50;
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎵 Audio Duration Test</h1>
+    <p>This page tests the actual duration of audio files from the music API</p>
+
+    <div class="warning">
+        ⚠️ <strong>Important:</strong> The API returns metadata showing full song duration (e.g., 3:45), but the actual audio URLs are 30-second previews due to copyright restrictions.
+    </div>
+
+    <div class="test-card">
+        <h2>Test Track</h2>
+        <div id="track-info">Loading...</div>
+        <button onclick="loadTrack()">Load Random Track</button>
+        <button onclick="playTrack()">Play</button>
+        <button onclick="pauseTrack()">Pause</button>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+        
+        <div class="info">
+            <div><strong>Metadata Duration:</strong> <span id="meta-duration">-</span></div>
+            <div><strong>Actual Audio Duration:</strong> <span id="real-duration">-</span></div>
+            <div><strong>Current Time:</strong> <span id="current-time">0:00</span></div>
+            <div><strong>File Size:</strong> <span id="file-size">-</span></div>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <div class="test-card">
+        <h2>📊 Why This Happens</h2>
+        <ul>
+            <li><strong>Deezer API:</strong> Returns metadata with full duration BUT preview URL with 30-sec audio</li>
+            <li><strong>iTunes API:</strong> Returns metadata with full duration BUT preview URL with 30-sec audio</li>
+            <li><strong>JioSaavn API:</strong> Returns metadata with full duration BUT preview URL with 30-sec audio</li>
+        </ul>
+        <p><strong>This is a legal/licensing limitation, not a bug!</strong></p>
+    </div>
+
+    <div class="test-card">
+        <h2>✅ Solution: Jamendo API</h2>
+        <p>Jamendo provides FULL-LENGTH songs legally (Creative Commons licensed)</p>
+        <ol>
+            <li>Register at: <a href="https://devportal.jamendo.com/signup" target="_blank" style="color: #e13238">https://devportal.jamendo.com/signup</a></li>
+            <li>Get your Client ID</li>
+            <li>Update music-server.js line 85</li>
+            <li>Uncomment lines 120-127</li>
+            <li>Restart server</li>
+        </ol>
+    </div>
+
+    <audio id="audio"></audio>
+
+    <script>
+        const audio = document.getElementById('audio');
+        let currentTrack = null;
+
+        async function loadTrack() {
+            try {
+                const response = await fetch('http://localhost:3001/api/music/search?q=rock&limit=1');
+                const data = await response.json();
+                
+                if (data.success && data.results.length > 0) {
+                    currentTrack = data.results[0];
+                    
+                    document.getElementById('track-info').innerHTML = `
+                        <strong>${currentTrack.title}</strong> by ${currentTrack.artist}<br>
+                        <small>Source: ${currentTrack.source}</small>
+                    `;
+                    
+                    document.getElementById('meta-duration').textContent = formatTime(currentTrack.duration);
+                    
+                    audio.src = currentTrack.preview;
+                    
+                    // Get file size
+                    fetch(currentTrack.preview, { method: 'HEAD' })
+                        .then(res => {
+                            const size = res.headers.get('content-length');
+                            document.getElementById('file-size').textContent = 
+                                size ? `${(size / 1024).toFixed(0)} KB` : 'Unknown';
+                        });
+                }
+            } catch (error) {
+                console.error('Error loading track:', error);
+                document.getElementById('track-info').textContent = 'Error loading track';
+            }
+        }
+
+        function playTrack() {
+            if (audio.src) {
+                audio.play();
+            }
+        }
+
+        function pauseTrack() {
+            audio.pause();
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        audio.addEventListener('loadedmetadata', () => {
+            const realDuration = audio.duration;
+            document.getElementById('real-duration').textContent = formatTime(realDuration);
+            
+            const metaDuration = currentTrack ? currentTrack.duration : 0;
+            
+            if (realDuration < 35 && metaDuration > 60) {
+                document.getElementById('result').innerHTML = `
+                    <div class="warning">
+                        ⚠️ <strong>MISMATCH DETECTED!</strong><br>
+                        API says: ${formatTime(metaDuration)} but actual audio is only ${formatTime(realDuration)}<br>
+                        This is a 30-second preview, not the full song!
+                    </div>
+                `;
+            } else if (realDuration > 60) {
+                document.getElementById('result').innerHTML = `
+                    <div class="success">
+                        ✅ <strong>FULL SONG!</strong><br>
+                        This is a complete track (${formatTime(realDuration)})
+                    </div>
+                `;
+            }
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            document.getElementById('current-time').textContent = formatTime(audio.currentTime);
+            const progress = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+        });
+
+        // Auto-load on page load
+        loadTrack();
+    </script>
+</body>
+</html>

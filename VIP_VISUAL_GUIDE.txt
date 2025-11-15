@@ -1,0 +1,320 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    🔥 FIRELIVES VIP MUSIC SYSTEM 🔥                          ║
+║                         VISUAL USER GUIDE                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                          🆓 FREE USER VIEW                                   │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+HOME PAGE - ELECTRONIC SECTION:
+┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
+│   Track 1   │   Track 2   │   Track 3   │   Track 4   │   Track 5   │   Track 6   │
+│  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │
+│             │             │ 🔥 FYRE+    │ ⚡ PRO+     │ 💎 PLUS+    │ 👨‍👩‍👧‍👦 FAMILY+ │
+│             │             │             │             │             │             │
+│   ✅ FREE   │   ✅ FREE   │   🔒 LOCKED │   🔒 LOCKED │   🔒 LOCKED │   🔒 LOCKED │
+│  "Song A"   │  "Song B"   │  "Song C"   │  "Song D"   │  "Song E"   │  "Song F"   │
+│  Artist 1   │  Artist 2   │  Artist 3   │  Artist 4   │  Artist 5   │  Artist 6   │
+└─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
+   ▲ PLAYABLE     ▲ PLAYABLE     ▲ LOCKED      ▲ LOCKED      ▲ LOCKED      ▲ LOCKED
+
+
+WHAT HAPPENS WHEN FREE USER CLICKS LOCKED TRACK:
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│                          🔒 UPGRADE REQUIRED                                 │
+│                                                                              │
+│              This is a 🔥 Fyre+ exclusive track!                            │
+│                                                                              │
+│         Upgrade to Fyre+ or higher to unlock this music.                    │
+│                                                                              │
+│                         [OK - Take me to Premium]                           │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+                    USER REDIRECTED TO PREMIUM PAGE
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                        🔥 FYRE+ USER VIEW ($4.99)                           │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+HOME PAGE - ELECTRONIC SECTION:
+┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
+│   Track 1   │   Track 2   │   Track 3   │   Track 4   │   Track 5   │   Track 6   │
+│  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │
+│             │             │ 🔥 FYRE+    │ ⚡ PRO+     │ 💎 PLUS+    │ 👨‍👩‍👧‍👦 FAMILY+ │
+│             │             │             │             │             │             │
+│   ✅ FREE   │   ✅ FREE   │ ✅ UNLOCKED │   🔒 LOCKED │   🔒 LOCKED │   🔒 LOCKED │
+│  "Song A"   │  "Song B"   │  "Song C"   │  "Song D"   │  "Song E"   │  "Song F"   │
+│  Artist 1   │  Artist 2   │  Artist 3   │  Artist 4   │  Artist 5   │  Artist 6   │
+└─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
+   ▲ PLAYABLE     ▲ PLAYABLE     ▲ PLAYABLE    ▲ LOCKED      ▲ LOCKED      ▲ LOCKED
+
+ACCESS: 50% of catalog (3 out of 6 tracks)
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                        ⚡ PRO+ USER VIEW ($9.99)                            │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+HOME PAGE - ELECTRONIC SECTION:
+┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
+│   Track 1   │   Track 2   │   Track 3   │   Track 4   │   Track 5   │   Track 6   │
+│  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │
+│             │             │ 🔥 FYRE+    │ ⚡ PRO+     │ 💎 PLUS+    │ 👨‍👩‍👧‍👦 FAMILY+ │
+│             │             │             │             │             │             │
+│   ✅ FREE   │   ✅ FREE   │ ✅ UNLOCKED │ ✅ UNLOCKED │   🔒 LOCKED │   🔒 LOCKED │
+│  "Song A"   │  "Song B"   │  "Song C"   │  "Song D"   │  "Song E"   │  "Song F"   │
+│  Artist 1   │  Artist 2   │  Artist 3   │  Artist 4   │  Artist 5   │  Artist 6   │
+└─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
+   ▲ PLAYABLE     ▲ PLAYABLE     ▲ PLAYABLE    ▲ PLAYABLE    ▲ LOCKED      ▲ LOCKED
+
+ACCESS: 67% of catalog (4 out of 6 tracks)
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                        💎 PLUS+ USER VIEW ($14.99)                          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+HOME PAGE - ELECTRONIC SECTION:
+┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
+│   Track 1   │   Track 2   │   Track 3   │   Track 4   │   Track 5   │   Track 6   │
+│  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │
+│             │             │ 🔥 FYRE+    │ ⚡ PRO+     │ 💎 PLUS+    │ 👨‍👩‍👧‍👦 FAMILY+ │
+│             │             │             │             │             │             │
+│   ✅ FREE   │   ✅ FREE   │ ✅ UNLOCKED │ ✅ UNLOCKED │ ✅ UNLOCKED │   🔒 LOCKED │
+│  "Song A"   │  "Song B"   │  "Song C"   │  "Song D"   │  "Song E"   │  "Song F"   │
+│  Artist 1   │  Artist 2   │  Artist 3   │  Artist 4   │  Artist 5   │  Artist 6   │
+└─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
+   ▲ PLAYABLE     ▲ PLAYABLE     ▲ PLAYABLE    ▲ PLAYABLE    ▲ PLAYABLE    ▲ LOCKED
+
+ACCESS: 83% of catalog (5 out of 6 tracks)
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                    👨‍👩‍👧‍👦 FAMILY+ USER VIEW ($19.99)                          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+HOME PAGE - ELECTRONIC SECTION:
+┌─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
+│   Track 1   │   Track 2   │   Track 3   │   Track 4   │   Track 5   │   Track 6   │
+│  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │  [Album]    │
+│             │             │ 🔥 FYRE+    │ ⚡ PRO+     │ 💎 PLUS+    │ 👨‍👩‍👧‍👦 FAMILY+ │
+│             │             │             │             │             │             │
+│   ✅ FREE   │   ✅ FREE   │ ✅ UNLOCKED │ ✅ UNLOCKED │ ✅ UNLOCKED │ ✅ UNLOCKED │
+│  "Song A"   │  "Song B"   │  "Song C"   │  "Song D"   │  "Song E"   │  "Song F"   │
+│  Artist 1   │  Artist 2   │  Artist 3   │  Artist 4   │  Artist 5   │  Artist 6   │
+└─────────────┴─────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
+   ▲ PLAYABLE     ▲ PLAYABLE     ▲ PLAYABLE    ▲ PLAYABLE    ▲ PLAYABLE    ▲ PLAYABLE
+
+ACCESS: 100% of catalog (ALL 6 TRACKS!) 🎉🎉🎉
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         SEARCH RESULTS VIEW                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+SEARCH: "Drake" (30 results)
+
+FREE USER SEES:
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│  Results for "Drake" (30)                                                   │
+│                                                                              │
+│  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐  │
+│  │ ✅  │ │ ✅  │ │ ✅  │ │ ✅  │ │🔥🔒 │ │🔥🔒 │ │⚡🔒 │ │⚡🔒 │ │💎🔒 │  │
+│  │FREE │ │FREE │ │FREE │ │FREE │ │FYRE+│ │FYRE+│ │PRO+ │ │PRO+ │ │PLUS+│  │
+│  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘  │
+│                                                                              │
+│  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐  │
+│  │ ✅  │ │ ✅  │ │ ✅  │ │ ✅  │ │🔥🔒 │ │🔥🔒 │ │⚡🔒 │ │⚡🔒 │ │💎🔒 │  │
+│  │FREE │ │FREE │ │FREE │ │FREE │ │FYRE+│ │FYRE+│ │PRO+ │ │PRO+ │ │PLUS+│  │
+│  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘  │
+│                                                                              │
+│  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐  │
+│  │ ✅  │ │ ✅  │ │ ✅  │ │ ✅  │ │🔥🔒 │ │🔥🔒 │ │⚡🔒 │ │⚡🔒 │ │💎🔒 │  │
+│  │FREE │ │FREE │ │FREE │ │FREE │ │FYRE+│ │FYRE+│ │PRO+ │ │PRO+ │ │PLUS+│  │
+│  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘ └─────┘  │
+│                                                                              │
+│  ┌─────┐ ┌─────┐ ┌─────┐                                                   │
+│  │👨‍👩‍👧‍👦🔒│ │👨‍👩‍👧‍👦🔒│ │👨‍👩‍👧‍👦🔒│                                                   │
+│  │FMLY+│ │FMLY+│ │FMLY+│                                                   │
+│  └─────┘ └─────┘ └─────┘                                                   │
+│                                                                              │
+│  FREE USER CAN PLAY: 12 out of 30 tracks (40%)                             │
+│  LOCKED TRACKS: 18 (60%)                                                    │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         VIP BADGE DESIGN                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│  🔥 FYRE+ BADGE:                                                            │
+│  ┌──────────────┐                                                           │
+│  │ 🔥 FYRE+     │  ← Yellow/Gold background                                │
+│  └──────────────┘     Black text                                            │
+│                       Top-left of album cover                               │
+│                                                                              │
+│  ⚡ PRO+ BADGE:                                                             │
+│  ┌──────────────┐                                                           │
+│  │ ⚡ PRO+      │  ← Purple background                                      │
+│  └──────────────┘     White text                                            │
+│                       Top-left of album cover                               │
+│                                                                              │
+│  💎 PLUS+ BADGE:                                                            │
+│  ┌──────────────┐                                                           │
+│  │ 💎 PLUS+     │  ← Purple gradient background                            │
+│  └──────────────┘     White text                                            │
+│                       Top-left of album cover                               │
+│                                                                              │
+│  👨‍👩‍👧‍👦 FAMILY+ BADGE:                                                         │
+│  ┌──────────────┐                                                           │
+│  │ 👨‍👩‍👧‍👦 FAMILY+ │  ← Pink gradient background                             │
+│  └──────────────┘     White text                                            │
+│                       Top-left of album cover                               │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         LOCK OVERLAY EFFECT                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+BEFORE HOVER (Locked Track):
+┌─────────────────────┐
+│                     │
+│   [Album Cover]     │
+│                     │
+│  🔥 FYRE+           │  ← VIP badge visible
+│                     │
+│                     │
+└─────────────────────┘
+  "Song Title"
+  Artist Name
+
+
+ON HOVER (Locked Track):
+┌─────────────────────┐
+│                     │
+│   [Album Cover]     │
+│    (darkened)       │
+│  🔥 FYRE+           │  ← VIP badge still visible
+│                     │
+│       🔒            │  ← Lock icon appears (large)
+└─────────────────────┘
+  "Song Title"
+  Artist Name
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         UPGRADE FLOW                                         ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+STEP 1: User clicks locked track
+        ↓
+STEP 2: Alert appears
+        ┌──────────────────────────────────────────────────────────────┐
+        │  🔒 This is a ⚡ Pro+ exclusive track!                       │
+        │                                                              │
+        │  Upgrade to Pro+ or higher to unlock this music.            │
+        │                                                              │
+        │                        [OK]                                  │
+        └──────────────────────────────────────────────────────────────┘
+        ↓
+STEP 3: Redirected to Premium page
+        ┌──────────────────────────────────────────────────────────────┐
+        │                   Choose Your Plan                           │
+        │                                                              │
+        │  🔥 Fyre+    ⚡ Pro+     💎 Plus+    👨‍👩‍👧‍👦 Family+          │
+        │  $4.99       $9.99      $14.99      $19.99                  │
+        │                                                              │
+        │  [Subscribe] [Subscribe] [Subscribe] [Subscribe]            │
+        └──────────────────────────────────────────────────────────────┘
+        ↓
+STEP 4: User selects plan and pays
+        ↓
+STEP 5: User now has access to unlocked tracks! 🎉
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         QUICK REFERENCE                                      ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+SUBSCRIPTION TIERS:
+┌──────────────┬──────────┬─────────────────────────────────────────────────┐
+│ TIER         │ PRICE    │ MUSIC ACCESS                                    │
+├──────────────┼──────────┼─────────────────────────────────────────────────┤
+│ FREE         │ $0       │ ~33% of catalog (2/6 tracks per genre)         │
+│ 🔥 Fyre+     │ $4.99    │ ~50% of catalog (3/6 tracks per genre)         │
+│ ⚡ Pro+      │ $9.99    │ ~67% of catalog (4/6 tracks per genre)         │
+│ 💎 Plus+     │ $14.99   │ ~83% of catalog (5/6 tracks per genre)         │
+│ 👨‍👩‍👧‍👦 Family+ │ $19.99   │ 100% of catalog (ALL TRACKS!)               │
+└──────────────┴──────────┴─────────────────────────────────────────────────┘
+
+VIP BADGE COLORS:
+┌──────────────┬─────────────────────────────────────────────────────────────┐
+│ 🔥 Fyre+     │ Yellow/Gold (rgba(251, 188, 5, 0.9))                       │
+│ ⚡ Pro+      │ Purple (rgba(138, 43, 226, 0.9))                           │
+│ 💎 Plus+     │ Purple Gradient (#667eea → #764ba2)                        │
+│ 👨‍👩‍👧‍👦 Family+ │ Pink Gradient (#f093fb → #f5576c)                       │
+└──────────────┴─────────────────────────────────────────────────────────────┘
+
+TRACK DISTRIBUTION (Home Page):
+┌──────────────┬──────────────────────────────────────────────────────────────┐
+│ Track 1-2    │ 🆓 FREE (No subscription)                                   │
+│ Track 3      │ 🔥 Fyre+ Required                                           │
+│ Track 4      │ ⚡ Pro+ Required                                            │
+│ Track 5      │ 💎 Plus+ Required                                           │
+│ Track 6      │ 👨‍👩‍👧‍👦 Family+ Required                                       │
+└──────────────┴──────────────────────────────────────────────────────────────┘
+
+SEARCH RESULTS DISTRIBUTION (30 tracks):
+┌──────────────┬──────────────────────────────────────────────────────────────┐
+│ 40% (12)     │ 🆓 FREE                                                     │
+│ 20% (6)      │ 🔥 Fyre+ Required                                           │
+│ 20% (6)      │ ⚡ Pro+ Required                                            │
+│ 10% (3)      │ 💎 Plus+ Required                                           │
+│ 10% (3)      │ 👨‍👩‍👧‍👦 Family+ Required                                       │
+└──────────────┴──────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         TESTING CHECKLIST                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+□ Test as FREE user - verify only 2 tracks playable per genre
+□ Test as Fyre+ user - verify 3 tracks playable per genre
+□ Test as Pro+ user - verify 4 tracks playable per genre
+□ Test as Plus+ user - verify 5 tracks playable per genre
+□ Test as Family+ user - verify ALL 6 tracks playable per genre
+
+□ Verify VIP badges appear on locked tracks
+□ Verify lock overlay appears on hover
+□ Verify alert shows when clicking locked track
+□ Verify redirect to Premium page after alert
+□ Verify search results show correct VIP distribution
+
+□ Test upgrade flow from free to paid
+□ Test upgrade flow from lower tier to higher tier
+□ Verify payment modal works correctly
+□ Verify subscription status updates after payment
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         🎉 ENJOY YOUR VIP SYSTEM! 🎉                        ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Your FireLives app now has a complete VIP music system with:
+✅ 4 Premium tiers
+✅ Visual VIP badges
+✅ Lock overlays
+✅ Upgrade prompts
+✅ Revenue generation potential
+
+Start monetizing your music platform today! 💰🎵
